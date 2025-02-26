@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart'; // Ajout de l’importation pour GetX (Transition et Get)
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart'; // Ajout pour Poppins (si non déjà présent)
 
 // Importez les pages cibles et le contrôleur
 import 'package:africanmedicalreview/acount_page.dart'; // Ajustez le chemin
 import 'package:africanmedicalreview/inscription_page.dart'; // Ajustez le chemin (SignupPage)
-import 'package:africanmedicalreview/screens/tablet/tablet_home.dart'; // Ajustez le chemin
+import 'package:africanmedicalreview/screens/mobile/mobile_home.dart'; // Ajustez le chemin
 import 'package:africanmedicalreview/widgets/specialities_page.dart'; // Ajustez le chemin
 import 'package:africanmedicalreview/controllers/auth_controller.dart'; // Ajustez le chemin
 
-class TabletMenuDrawer extends StatefulWidget {
+class MobileMenuDrawer extends StatefulWidget {
   @override
-  _TabletMenuDrawerState createState() => _TabletMenuDrawerState();
+  _MobileMenuDrawerState createState() => _MobileMenuDrawerState();
 }
 
-class _TabletMenuDrawerState extends State<TabletMenuDrawer> {
+class _MobileMenuDrawerState extends State<MobileMenuDrawer> {
   late AuthController
       authController; // Instance du contrôleur d’authentification
   bool _isHovered = false; // Variable d’instance unique pour gérer l’état hover
@@ -41,8 +41,7 @@ class _TabletMenuDrawerState extends State<TabletMenuDrawer> {
         padding: EdgeInsets.zero,
         children: [
           Container(
-            padding:
-                EdgeInsets.all(20), // Conserver pour un look aéré sur tablette
+            padding: EdgeInsets.all(20), // Réduit pour un look aéré sur mobile
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
@@ -63,7 +62,7 @@ class _TabletMenuDrawerState extends State<TabletMenuDrawer> {
             child: Text(
               "Menu",
               style: GoogleFonts.poppins(
-                fontSize: 28, // Conserver pour un impact premium sur tablette
+                fontSize: 24, // Réduit pour un mobile (au lieu de 26)
                 fontWeight: FontWeight.bold,
                 color: Colors.white,
                 shadows: [
@@ -78,18 +77,20 @@ class _TabletMenuDrawerState extends State<TabletMenuDrawer> {
           ),
           Padding(
             padding: EdgeInsets.symmetric(
-                horizontal: 20, vertical: 12), // Conserver pour un look aéré
+                horizontal: 16,
+                vertical: 10), // Ajusté pour un look aéré sur mobile
             child: Center(
               child: _buildDrawerButton(
                   Icons.home,
                   "Accueil",
-                  () => Get.to(() => TabletHome(),
+                  () => Get.to(() => MobileHome(),
                       transition: Transition.fadeIn)),
             ),
           ),
           Padding(
             padding: EdgeInsets.symmetric(
-                horizontal: 20, vertical: 12), // Conserver pour un look aéré
+                horizontal: 16,
+                vertical: 10), // Ajusté pour un look aéré sur mobile
             child: Center(
               child: _buildDrawerButton(
                   Icons.article,
@@ -98,11 +99,22 @@ class _TabletMenuDrawerState extends State<TabletMenuDrawer> {
                       transition: Transition.fadeIn)),
             ),
           ),
+          Padding(
+            padding: EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 10), // Ajusté pour un look aéré sur mobile
+            child: Center(
+              child: _buildDrawerButton(
+                  Icons.person,
+                  "Compte",
+                  () => Get.to(() => AccountPage(),
+                      transition: Transition.fadeIn)),
+            ),
+          ),
           // Ajout de la section demandée
           Container(
             padding: EdgeInsets.symmetric(
-                vertical: 15,
-                horizontal: 20), // Espacement cohérent sur tablette
+                vertical: 15, horizontal: 20), // Espacement cohérent sur mobile
             child: Obx(() {
               return authController.isLoggedIn.value
                   ? PopupMenuButton<String>(
@@ -120,14 +132,15 @@ class _TabletMenuDrawerState extends State<TabletMenuDrawer> {
                         onEnter: (_) => _showHoverEffect(true),
                         onExit: (_) => _showHoverEffect(false),
                         child: AnimatedScale(
-                          scale:
-                              _isHovered ? 1.15 : 1.0, // Conserver effet hover
+                          scale: _isHovered
+                              ? 1.15
+                              : 1.0, // Augmenté pour un effet hover plus visible
                           duration: Duration(milliseconds: 200),
                           child: Icon(
                             Icons.account_circle,
                             color: Colors.white,
                             size:
-                                32, // Conserver pour une visibilité améliorée sur tablette
+                                28, // Réduit pour une visibilité adaptée sur mobile (au lieu de 30)
                             shadows: [
                               Shadow(
                                 blurRadius: 1.5,
@@ -146,7 +159,7 @@ class _TabletMenuDrawerState extends State<TabletMenuDrawer> {
                             style: GoogleFonts.poppins(
                               color: Colors.grey[800],
                               fontSize:
-                                  18, // Conserver pour une lisibilité optimale sur tablette
+                                  16, // Conserver pour une lisibilité optimale sur mobile
                               fontWeight: FontWeight.w500,
                             ),
                           ),
@@ -158,7 +171,7 @@ class _TabletMenuDrawerState extends State<TabletMenuDrawer> {
                             style: GoogleFonts.poppins(
                               color: Colors.grey[800],
                               fontSize:
-                                  18, // Conserver pour une lisibilité optimale sur tablette
+                                  16, // Conserver pour une lisibilité optimale sur mobile
                               fontWeight: FontWeight.w500,
                             ),
                           ),
@@ -170,7 +183,9 @@ class _TabletMenuDrawerState extends State<TabletMenuDrawer> {
                       onEnter: (_) => _showHoverEffect(true),
                       onExit: (_) => _showHoverEffect(false),
                       child: AnimatedScale(
-                        scale: _isHovered ? 1.15 : 1.0, // Conserver effet hover
+                        scale: _isHovered
+                            ? 1.15
+                            : 1.0, // Augmenté pour un effet hover plus visible
                         duration: Duration(milliseconds: 200),
                         child: ElevatedButton(
                           onPressed: () {
@@ -185,16 +200,17 @@ class _TabletMenuDrawerState extends State<TabletMenuDrawer> {
                             ),
                             elevation: 5,
                             padding: EdgeInsets.symmetric(
-                                horizontal: 25,
-                                vertical: 16), // Conserver pour tablette
-                            minimumSize: Size(240, 0), // Conserver largeur fixe
+                                horizontal: 20,
+                                vertical: 14), // Ajusté pour mobile
+                            minimumSize: Size(
+                                220, 0), // Réduit pour mobile (au lieu de 240)
                           ),
                           child: Text(
                             "S'inscrire",
                             style: GoogleFonts.poppins(
                               color: Colors.white,
                               fontSize:
-                                  18, // Conserver pour une lisibilité optimale sur tablette
+                                  16, // Conserver pour une lisibilité optimale sur mobile
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -221,9 +237,8 @@ class _TabletMenuDrawerState extends State<TabletMenuDrawer> {
         behavior:
             HitTestBehavior.opaque, // S’assurer que le widget reçoit les events
         child: Container(
-          width: 240, // Forcer la largeur fixe pour couvrir tout le bouton
-          height:
-              52, // Forcer la hauteur fixe pour correspondre au padding et au contenu
+          width: 220, // Réduit pour mobile (au lieu de 240)
+          height: 48, // Réduit pour mobile (au lieu de 52)
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [
@@ -275,16 +290,15 @@ class _TabletMenuDrawerState extends State<TabletMenuDrawer> {
                 Icon(
                   icon,
                   color: Colors.white,
-                  size: 28, // Conserver pour une visibilité améliorée
+                  size:
+                      24, // Réduit pour une visibilité adaptée sur mobile (au lieu de 28)
                 ),
-                SizedBox(
-                    width:
-                        12), // Conserver espacement entre l’icône et le texte
+                SizedBox(width: 10), // Réduit pour mobile (au lieu de 12)
                 Text(
                   title,
                   style: GoogleFonts.poppins(
                     fontSize:
-                        18, // Conserver pour une lisibilité optimale sur tablette
+                        16, // Réduit pour une lisibilité optimale sur mobile (au lieu de 18)
                     fontWeight:
                         FontWeight.bold, // Conserver pour un impact premium
                     color: Colors.white,
