@@ -37,14 +37,10 @@ class _HeaderSectionState extends State<HeaderSection>
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(
-          horizontal: 100, vertical: 50), // Conserver pour un look premium
+      padding: const EdgeInsets.symmetric(horizontal: 100, vertical: 50),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [
-            Color(0xFF1976D2),
-            Color(0xFFB2DFDB)
-          ], // Dégradé bleu médical à vert sauge
+          colors: [Color(0xFF1976D2), Color(0xFFB2DFDB)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -60,7 +56,6 @@ class _HeaderSectionState extends State<HeaderSection>
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          // 📷 Image inchangée avec effet hover
           MouseRegion(
             cursor: SystemMouseCursors.click,
             onEnter: (_) => _showImageHover(true),
@@ -69,20 +64,50 @@ class _HeaderSectionState extends State<HeaderSection>
               scale: _isImageHovered ? 1.05 : 1.0,
               duration: Duration(milliseconds: 200),
               child: ClipRRect(
-                borderRadius:
-                    BorderRadius.circular(12), // Bordures arrondies subtiles
+                borderRadius: BorderRadius.circular(12),
                 child: Image.network(
                   "http://158.69.52.19:8007/media/StaticImages/image-desktop-header.jpg",
                   width: 450,
                   height: 350,
                   fit: BoxFit.cover,
+                  loadingBuilder: (BuildContext context, Widget child,
+                      ImageChunkEvent? loadingProgress) {
+                    if (loadingProgress == null) {
+                      return child; // Image chargée, afficher l'image
+                    }
+                    return Container(
+                      width: 450,
+                      height: 350,
+                      child: Center(
+                        child: CircularProgressIndicator(
+                          value: loadingProgress.expectedTotalBytes != null
+                              ? loadingProgress.cumulativeBytesLoaded /
+                                  (loadingProgress.expectedTotalBytes ?? 1)
+                              : null, // Progression ou indéterminé
+                          color: Colors.white, // Couleur assortie au thème
+                        ),
+                      ),
+                    );
+                  },
+                  errorBuilder: (BuildContext context, Object error,
+                      StackTrace? stackTrace) {
+                    return Container(
+                      width: 450,
+                      height: 350,
+                      color: Colors.grey,
+                      child: Center(
+                        child: Text(
+                          "Erreur de chargement",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    );
+                  },
                 ),
               ),
             ),
           ),
-          SizedBox(width: 100), // Espacement accru pour un équilibre visuel
-
-          // 📝 Texte à droite, visible immédiatement sans animation
+          SizedBox(width: 100),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -91,7 +116,7 @@ class _HeaderSectionState extends State<HeaderSection>
                 Text(
                   "African Medical Review",
                   style: TextStyle(
-                    fontSize: 36, // Conserver pour un impact premium
+                    fontSize: 36,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
                     shadows: [
@@ -108,8 +133,8 @@ class _HeaderSectionState extends State<HeaderSection>
                   "Donec elementum odio ut suscipit congue. Fusce magna mattis vel fermentum, ultricies et velit. "
                   "Suspendisse viverra, ante in eleifend vulputate, lacus lorem pretium ligula, tincidunt posuere sapien.",
                   style: TextStyle(
-                    fontSize: 24, // Augmenté pour une lisibilité accrue
-                    color: Colors.white, // Maximiser le contraste
+                    fontSize: 24,
+                    color: Colors.white,
                     height: 1.5,
                     shadows: [
                       Shadow(
