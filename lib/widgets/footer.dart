@@ -1,212 +1,210 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart'; // Ajout du package
-import 'package:google_fonts/google_fonts.dart'; // Ajout de l’importation pour GoogleFonts
-import 'package:get/get.dart'; // Ajout de GetX pour la navigation
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:get/get.dart';
 
 class Footer extends StatefulWidget {
   @override
   _FooterState createState() => _FooterState();
 }
 
-class _FooterState extends State<Footer> {
-  bool _isHovered = false; // Variable d’instance unique pour gérer l’état hover
+class _FooterState extends State<Footer> with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _fadeAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 1000),
+      vsync: this,
+    );
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeIn),
+    );
+    _controller.forward();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
-
     bool isMobile = screenWidth < 600;
-    bool isTablet = screenWidth >= 600 && screenWidth < 1024;
 
-    debugPrint("Footer is being built with width: $screenWidth"); // Débogage
-
-    return Container(
-      constraints: BoxConstraints(minHeight: 250), // Augmenté pour un look aéré
-      padding: EdgeInsets.symmetric(
-        vertical: 50, // Augmenté pour un look premium
-        horizontal: isMobile
-            ? 20
-            : isTablet
-                ? 50
-                : 120, // Augmenté pour grand écran
-      ),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            Color(0xFF1976D2), // Bleu médical foncé
-            Color(0xFF66BB6A) // Vert émeraude
-          ], // Conserver dégradé bleu virant au vert médical
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
+    return FadeTransition(
+      opacity: _fadeAnimation,
+      child: Container(
+        padding: EdgeInsets.all(isMobile ? 20 : 40),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Color(0xFF2E7D32), // Vert médical profond
+              Color(0xFF1976D2), // Bleu profond (medical blue)
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
         ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
-            blurRadius: 10,
-            offset: Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center, // Centré sur grand écran
-        children: [
-          // 📌 Logo ou titre du footer avec effet hover sur grand écran
-          MouseRegion(
-            cursor: SystemMouseCursors.click,
-            onEnter: (_) => setState(() => _isHovered = true),
-            onExit: (_) => setState(() => _isHovered = false),
-            child: AnimatedScale(
-              scale: !isMobile && _isHovered ? 1.05 : 1.0,
-              duration: Duration(milliseconds: 200),
-              child: Text(
-                "African Medical Review",
-                style: GoogleFonts.poppins(
-                  fontSize: 26, // Augmenté pour un impact premium
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                  shadows: [
-                    Shadow(
-                      blurRadius: 1.5, // Augmenté pour un contraste accru
-                      color: Colors.black.withValues(alpha: 0.5),
-                      offset: Offset(1.0, 1.0),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          SizedBox(height: 25), // Augmenté pour un look aéré
-
-          // 🔗 Liens utiles & Contact
-          if (isMobile) ...[
-            // ✅ Affichage en colonne sur mobile
-            _buildFooterLinks(),
-            SizedBox(height: 25),
-            _buildContactSection(),
-          ] else
-            Row(
-              mainAxisAlignment:
-                  MainAxisAlignment.center, // Centré sur grand écran
-              children: [
-                _buildFooterLinks(),
-                SizedBox(width: 80), // Espacement accru entre liens et contact
-                _buildContactSection(),
-              ],
-            ),
-
-          SizedBox(height: 30), // Augmenté pour un look aéré
-
-          // 📜 Copyright
-          Divider(color: Colors.white.withValues(alpha: 0.3)),
-          SizedBox(height: 15), // Augmenté pour un look aéré
-          Center(
-            child: Text(
-              "© 2025 African Medical Review. Tous droits réservés.",
-              style: GoogleFonts.poppins(
-                color: Colors.white70,
-                fontSize: 16, // Augmenté pour une lisibilité optimale
-              ),
-              textAlign: TextAlign.center, // ✅ Centré sur mobile
-            ),
-          ),
-        ],
+        child: isMobile ? _buildMobileLayout() : _buildDesktopLayout(),
       ),
     );
   }
 
-  // 🔗 Liens utiles avec effet hover et navigation GetX
-  Widget _buildFooterLinks() {
+  Widget _buildMobileLayout() {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildFooterLink("Accueil", '/'),
-        _buildFooterLink("Spécialités", '/specialities'),
+        _buildHeader(),
+        SizedBox(height: 30),
+        _buildLinksColumn(),
+        SizedBox(height: 30),
+        _buildSocialAndContact(),
       ],
     );
   }
 
-  // 📧 Contact & Réseaux sociaux avec effet hover
-  Widget _buildContactSection() {
+  Widget _buildDesktopLayout() {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(flex: 2, child: _buildHeader()),
+        Expanded(flex: 1, child: _buildLinksColumn()),
+        Expanded(flex: 2, child: _buildSocialAndContact()),
+      ],
+    );
+  }
+
+  Widget _buildHeader() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Icône médicale (croix) comme demandé précédemment
+            Icon(
+              FontAwesomeIcons.plus,
+              size: 28,
+              color: Color(0xFFFF6B6B), // Rouge pour le contraste
+            ),
+            SizedBox(width: 12),
+            Text(
+              "AMR",
+              style: GoogleFonts.montserrat(
+                fontSize: 28,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+          ],
+        ),
+        SizedBox(height: 12),
+        Text(
+          "Connecting African Healthcare",
+          style: GoogleFonts.montserrat(
+            fontSize: 16,
+            color: Colors
+                .white70, // Ajusté pour contraster avec le dégradé vert-bleu
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildLinksColumn() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          "Contact : contact@africanmedicalreview.com",
-          style: GoogleFonts.poppins(
-            color: Colors.white70,
-            fontSize: 16, // Conserver pour lisibilité
+          "Navigation",
+          style: GoogleFonts.montserrat(
+            fontSize: 18,
+            color: Colors.white,
+            fontWeight: FontWeight.w600,
           ),
         ),
-        SizedBox(height: 15), // Conserver pour un look aéré
+        SizedBox(height: 16),
+        _buildLink("Home", "/"),
+        SizedBox(height: 12),
+        _buildLink("Specialties", "/specialities"),
+      ],
+    );
+  }
+
+  Widget _buildSocialAndContact() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
         Row(
-          mainAxisAlignment: MainAxisAlignment.center, // Centré sur grand écran
+          mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            _buildSocialIcon(FontAwesomeIcons.facebook),
-            SizedBox(width: 20), // Augmenté pour un alignement clair
-            _buildSocialIcon(FontAwesomeIcons.twitter),
-            SizedBox(width: 20),
-            _buildSocialIcon(FontAwesomeIcons.instagram),
+            _buildSocialButton(FontAwesomeIcons.facebook),
+            SizedBox(width: 16),
+            _buildSocialButton(FontAwesomeIcons.twitter),
+            SizedBox(width: 16),
+            _buildSocialButton(FontAwesomeIcons.linkedin),
           ],
+        ),
+        SizedBox(height: 20),
+        Text(
+          "info@amrhealth.org",
+          style: GoogleFonts.montserrat(
+            fontSize: 16,
+            color: Colors.white70, // Ajusté pour contraster avec le dégradé
+          ),
+        ),
+        SizedBox(height: 12),
+        Text(
+          "© 2025 AMR Health",
+          style: GoogleFonts.montserrat(
+            fontSize: 14,
+            color: Colors.white60, // Ajusté pour contraster avec le dégradé
+          ),
         ),
       ],
     );
   }
 
-  // Fonction pour créer un lien avec effet hover et navigation GetX
-  Widget _buildFooterLink(String text, String routeName) {
-    return Padding(
-      padding:
-          const EdgeInsets.only(bottom: 12.0), // Augmenté pour un look aéré
-      child: MouseRegion(
-        cursor: SystemMouseCursors.click,
-        onEnter: (_) => _showHoverEffect(true),
-        onExit: (_) => _showHoverEffect(false),
-        child: GestureDetector(
-          onTap: () => Get.toNamed(routeName), // Navigation avec Get.toNamed
-          child: AnimatedDefaultTextStyle(
-            duration: Duration(milliseconds: 200),
-            style: GoogleFonts.poppins(
-              fontSize: 16,
-              color: _isHovered ? Colors.grey[300]! : Colors.white,
-              fontWeight: FontWeight.normal,
-              decoration:
-                  _isHovered ? TextDecoration.underline : TextDecoration.none,
-            ),
-            child: Text(text),
+  Widget _buildLink(String title, String route) {
+    return InkWell(
+      onTap: () => Get.toNamed(route),
+      onHover: (hovering) => setState(() {}),
+      child: Padding(
+        padding: EdgeInsets.symmetric(vertical: 4),
+        child: Text(
+          title,
+          style: GoogleFonts.montserrat(
+            fontSize: 16,
+            color: Colors.white,
+            fontWeight: FontWeight.w400,
           ),
         ),
       ),
     );
   }
 
-  // Fonction pour créer une icône sociale avec effet hover
-  Widget _buildSocialIcon(IconData icon) {
-    return MouseRegion(
-      cursor: SystemMouseCursors.click,
-      onEnter: (_) => _showHoverEffect(true),
-      onExit: (_) => _showHoverEffect(false),
-      child: AnimatedScale(
-        scale: _isHovered ? 1.1 : 1.0,
-        duration: Duration(milliseconds: 200),
+  Widget _buildSocialButton(IconData icon) {
+    return InkWell(
+      onTap: () {},
+      borderRadius: BorderRadius.circular(20),
+      child: Container(
+        padding: EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          border: Border.all(
+              color: Colors.white
+                  .withOpacity(0.3)), // Ajusté pour contraster avec le dégradé
+        ),
         child: Icon(
           icon,
+          size: 20,
           color: Colors.white,
-          size: 26, // Augmenté pour un impact visuel
-          shadows: [
-            Shadow(
-              blurRadius: 1.5, // Augmenté pour un effet premium
-              color: Colors.black.withValues(alpha: 0.3),
-              offset: Offset(0, 1),
-            ),
-          ],
         ),
       ),
     );
-  }
-
-  void _showHoverEffect(bool isHovered) {
-    setState(() {
-      _isHovered = isHovered;
-    });
   }
 }
