@@ -55,7 +55,7 @@ class _SubmitArticlePageState extends State<SubmitArticlePage>
   /// ✅ Récupérer les spécialités depuis l'API
   Future<void> fetchSpecialities() async {
     setState(() => isLoading = true);
-    final String apiUrl = "http://127.0.0.1:8000/api/specialities/";
+    final String apiUrl = "http://158.69.52.19:8007/api/specialities/";
 
     try {
       final response = await http.get(
@@ -118,7 +118,7 @@ class _SubmitArticlePageState extends State<SubmitArticlePage>
 
     setState(() => isSubmitting = true);
 
-    final String apiUrl = "http://127.0.0.1:8000/api/articles/submit/";
+    final String apiUrl = "http://158.69.52.19:8007/api/articles/submit/";
     var request = http.MultipartRequest("POST", Uri.parse(apiUrl));
 
     request.headers['Authorization'] = "Bearer ${authController.token.value}";

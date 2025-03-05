@@ -49,7 +49,7 @@ class _SpecialitiesPageState extends State<SpecialitiesPage>
 
   /// 🔹 Récupération des spécialités depuis l'API
   Future<void> fetchSpecialities() async {
-    final String apiUrl = "http://127.0.0.1:8000/api/specialities/articles/";
+    final String apiUrl = "http://158.69.52.19:8007/api/specialities/articles/";
 
     try {
       final response = await http.get(Uri.parse(apiUrl));

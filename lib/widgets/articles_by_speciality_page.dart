@@ -11,6 +11,7 @@ class ArticlesBySpecialityPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('Speciality data______: $speciality');
     // Sécuriser l'accès à speciality["articles"] pour gérer null ou vide
     final dynamic articlesData = speciality["articles"];
     final List<dynamic> articles = articlesData is List<dynamic>

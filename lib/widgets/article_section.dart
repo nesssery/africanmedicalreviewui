@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:africanmedicalreview/services/api_service.dart';
 import 'package:africanmedicalreview/widgets/article_card.dart';
 

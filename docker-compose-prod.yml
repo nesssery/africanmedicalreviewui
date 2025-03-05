@@ -1,0 +1,15 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: africanmedicalreviewui
+    ports:
+      - "8011:8011" 
+    networks:
+      - nesssery
+
+networks:
+  nesssery:
+    name: nesssery
+    external: true

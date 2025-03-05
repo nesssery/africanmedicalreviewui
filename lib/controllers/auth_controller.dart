@@ -48,7 +48,7 @@ class AuthController extends GetxController {
     isLoading.value = true;
     errorCodes.clear();
 
-    final String apiUrl = "http://127.0.0.1:8000/users/api/signup/";
+    final String apiUrl = "http://158.69.52.19:8007/users/api/signup/";
 
     try {
       final response = await http.post(
@@ -90,7 +90,7 @@ class AuthController extends GetxController {
   Future<void> loginUser(
       {required String email, required String password}) async {
     isLoading.value = true;
-    final String apiUrl = "http://127.0.0.1:8000/users/api/login/";
+    final String apiUrl = "http://158.69.52.19:8007/users/api/login/";
 
     try {
       final response = await http.post(
@@ -151,7 +151,7 @@ class AuthController extends GetxController {
   // ✅ Fonction de souscription
   Future<void> subscribeUser() async {
     isLoading.value = true;
-    final String apiUrl = "http://127.0.0.1:8000/users/api/subscribe/";
+    final String apiUrl = "http://158.69.52.19:8007/users/api/subscribe/";
 
     try {
       final response = await http.post(
@@ -189,7 +189,7 @@ class AuthController extends GetxController {
   Future<void> updateUserInfo(
       {required String newUsername, required String newTitle}) async {
     isLoading.value = true;
-    final String apiUrl = "http://127.0.0.1:8000/users/api/update/";
+    final String apiUrl = "http://158.69.52.19:8007/users/api/update/";
 
     try {
       final response = await http.put(
