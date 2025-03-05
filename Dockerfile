@@ -50,4 +50,4 @@ COPY --from=build-env /app/build/web /usr/share/nginx/html
 
 
 # Exposer le port 80 (port interne de Nginx)
-EXPOSE 8012
+EXPOSE 80
