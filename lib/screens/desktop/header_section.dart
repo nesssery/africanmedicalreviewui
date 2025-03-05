@@ -71,9 +71,9 @@ class _HeaderSectionState extends State<HeaderSection>
               child: ClipRRect(
                 borderRadius:
                     BorderRadius.circular(12), // Bordures arrondies subtiles
-                child: Image.asset(
-                  "images/image-desktop-header.jpg", // Vérifiez que l'image est bien déclarée
-                  width: 450, // Taille inchangée
+                child: Image.network(
+                  "http://158.69.52.19:8007/media/StaticImages/image-desktop-header.jpg",
+                  width: 450,
                   height: 350,
                   fit: BoxFit.cover,
                 ),
