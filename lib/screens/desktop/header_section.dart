@@ -40,7 +40,10 @@ class _HeaderSectionState extends State<HeaderSection>
       padding: const EdgeInsets.symmetric(horizontal: 100, vertical: 50),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [Color(0xFF1976D2), Color(0xFFB2DFDB)],
+          colors: [
+            Color(0xFF2E7D32), // Vert médical profond
+            Color(0xFF1976D2), // Bleu profond (medical blue)
+          ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),

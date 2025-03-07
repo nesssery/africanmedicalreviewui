@@ -25,8 +25,8 @@ class TopNavBar extends StatelessWidget {
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              Color(0xFF26A69A),
-              Color(0xFFA5D6A7)
+              Color(0xFF2E7D32), // Vert médical profond
+              Color(0xFF1976D2), // Bleu profond (medical blue)
             ], // Dégradé teal à vert clair
             begin: Alignment.topLeft,
             end: Alignment.topRight,

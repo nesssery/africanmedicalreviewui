@@ -1,7 +1,7 @@
 import 'package:africanmedicalreview/article_detail_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:cached_network_image/cached_network_image.dart'; // Ajout pour optimiser les images
+import 'package:cached_network_image/cached_network_image.dart';
 
 class ArticleCard extends StatefulWidget {
   final Map<String, dynamic> article;
@@ -30,136 +30,131 @@ class _ArticleCardState extends State<ArticleCard> {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double minWidth = screenWidth * 0.3;
+    double effectiveMinWidth = minWidth > 400 ? 400 : minWidth.clamp(300, 400);
+
+    // Ajuster maxLines en fonction de la largeur de l'écran
+    int titleMaxLines = effectiveMinWidth < 350
+        ? 1
+        : 2; // Réduire à 1 ligne si l'écran est petit
+    int descriptionMaxLines =
+        effectiveMinWidth < 350 ? 2 : 3; // Ajuster pour description
+
     return MouseRegion(
       cursor: SystemMouseCursors.click,
       onEnter: (_) => _showHoverEffect(true),
       onExit: (_) => _showHoverEffect(false),
       child: GestureDetector(
-        onTap: () => Get.to(() => ArticleDetailPage(article: widget.article),
-            transition: Transition.fadeIn), // Animation de navigation
+        onTap: () => Get.to(
+          () => ArticleDetailPage(article: widget.article),
+          transition: Transition.fadeIn,
+        ),
         child: AnimatedScale(
           scale: _isHovered ? 1.05 : 1.0,
-          duration: Duration(milliseconds: 200), // Conserver effet hover léger
+          duration: const Duration(milliseconds: 200),
           child: Container(
             constraints: BoxConstraints(
-              maxWidth: 400, // Largeur maximale pour un affichage cohérent
-              minWidth: 300, // Largeur minimale pour la responsivité
+              maxWidth: 400,
+              minWidth: effectiveMinWidth,
+            ),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              gradient: const LinearGradient(
+                colors: [
+                  Color(0xFF2E7D32), // Vert médical profond
+                  Color(0xFF1976D2), // Bleu profond (medical blue)
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.2),
+                  blurRadius: 8,
+                  offset: const Offset(0, 4),
+                ),
+              ],
             ),
             child: Card(
-              elevation: 6, // Conserver pour un effet 3D premium
+              elevation: 0,
+              color: Colors.white.withOpacity(0.9),
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12)),
+                borderRadius: BorderRadius.circular(12),
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize:
-                    MainAxisSize.min, // Ajuster pour une hauteur dynamique
-                mainAxisAlignment: MainAxisAlignment
-                    .spaceBetween, // Répartir l’espace vertical, plaçant le bouton en bas
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  // ✅ Image optimisée avec cached_network_image
-                  Stack(
-                    children: [
-                      ClipRRect(
-                        borderRadius:
-                            BorderRadius.vertical(top: Radius.circular(16)),
-                        child: widget.article["image_url"] != null &&
-                                widget.article["image_url"]
-                                    .toString()
-                                    .isNotEmpty
-                            ? CachedNetworkImage(
-                                imageUrl: widget.article["image_url"],
-                                width: double.infinity,
-                                height:
-                                    160, // Augmenté pour un équilibre visuel
-                                fit: BoxFit.cover,
-                                placeholder: (context, url) =>
-                                    Center(child: CircularProgressIndicator()),
-                                errorWidget: (context, url, error) =>
-                                    Image.asset(
-                                  "assets/images/placeholder.jpg",
-                                  width: double.infinity,
-                                  height: 160,
-                                  fit: BoxFit.cover,
-                                ),
-                              )
-                            : Image.asset(
-                                "assets/images/placeholder.jpg",
-                                width: double.infinity,
-                                height: 160,
-                                fit: BoxFit.cover,
+                  // Image section with responsive height
+                  AspectRatio(
+                    aspectRatio: 3 / 2,
+                    child: ClipRRect(
+                      borderRadius:
+                          const BorderRadius.vertical(top: Radius.circular(12)),
+                      child: widget.article["image_url"] != null &&
+                              widget.article["image_url"].toString().isNotEmpty
+                          ? CachedNetworkImage(
+                              imageUrl: widget.article["image_url"],
+                              fit: BoxFit.cover,
+                              width: double.infinity,
+                              placeholder: (context, url) => const Center(
+                                child: CircularProgressIndicator(),
                               ),
-                      ),
-                      Container(
-                        width: double.infinity,
-                        height: 160,
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [
-                              Color(0xFF26A69A).withValues(alpha: 0.5),
-                              Colors.transparent
-                            ],
-                            begin: Alignment.bottomCenter,
-                            end: Alignment.topCenter,
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withValues(alpha: 0.1),
-                              blurRadius: 4,
-                              offset: Offset(0, 2),
+                              errorWidget: (context, url, error) => Image.asset(
+                                "assets/images/placeholder.jpg",
+                                fit: BoxFit.cover,
+                                width: double.infinity,
+                              ),
+                            )
+                          : Image.asset(
+                              "assets/images/placeholder.jpg",
+                              fit: BoxFit.cover,
+                              width: double.infinity,
                             ),
-                          ],
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
 
-                  // ✅ Titre et Description avec contraste amélioré et flexibilité
+                  // Content section
                   Flexible(
-                    fit: FlexFit.loose, // Permettre un ajustement dynamique
+                    fit: FlexFit.loose,
                     child: Padding(
-                      padding: const EdgeInsets.all(
-                          16.0), // Conserver pour un look aéré
+                      padding: const EdgeInsets.all(16.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize
-                            .min, // Ajuster pour une hauteur dynamique
+                        mainAxisSize: MainAxisSize.min,
                         children: [
-                          MouseRegion(
-                            onEnter: (_) => setState(() {}),
-                            onExit: (_) => setState(() {}),
-                            child: AnimatedDefaultTextStyle(
-                              duration: Duration(milliseconds: 200),
-                              style: TextStyle(
-                                fontSize: 22, // Conserver pour un impact visuel
-                                fontWeight: FontWeight.bold,
-                                color: Colors.grey[800]!,
-                                shadows: [
-                                  Shadow(
-                                    blurRadius: 1.5,
-                                    color: Colors.black.withValues(alpha: 0.3),
-                                    offset: Offset(0, 1),
-                                  ),
-                                ],
-                              ),
-                              child: Text(
-                                widget.article["title"] ?? "Titre inconnu",
-                              ),
+                          Text(
+                            widget.article["title"] ?? "Titre inconnu",
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.grey[800],
+                              shadows: [
+                                Shadow(
+                                  blurRadius: 1.5,
+                                  color: Colors.black.withOpacity(0.3),
+                                  offset: const Offset(0, 1),
+                                ),
+                              ],
                             ),
+                            maxLines: titleMaxLines, // Ajusté dynamiquement
+                            overflow: TextOverflow.ellipsis,
                           ),
-                          SizedBox(height: 12), // Conserver pour un look aéré
+                          const SizedBox(height: 8),
                           Flexible(
+                            fit: FlexFit.loose,
                             child: Text(
                               widget.article["articleDescription"] ??
                                   "Description non disponible",
                               style: TextStyle(
-                                fontSize:
-                                    16, // Conserver pour une lisibilité optimale
-                                color: Colors.grey[500]!,
-                                height:
-                                    1.6, // Augmenté pour une lisibilité accrue
+                                fontSize: 14,
+                                color: Colors.grey[500],
+                                height: 1.5,
                               ),
-                              overflow: TextOverflow
-                                  .ellipsis, // Points de suspension si le texte est trop long
+                              maxLines:
+                                  descriptionMaxLines, // Ajusté dynamiquement
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ),
                         ],
@@ -167,56 +162,51 @@ class _ArticleCardState extends State<ArticleCard> {
                     ),
                   ),
 
-                  // ✅ Bouton "Lire plus" fixé en bas et centré, amélioré
-                  Container(
-                    padding: EdgeInsets.only(
-                        bottom: 16), // Espacement en bas pour fixer le bouton
+                  // Button section
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 16.0),
                     child: Center(
-                      // Centrer horizontalement le bouton
                       child: MouseRegion(
                         cursor: SystemMouseCursors.click,
                         onEnter: (_) => _showButtonHover(true),
                         onExit: (_) => _showButtonHover(false),
                         child: AnimatedContainer(
-                          duration: Duration(milliseconds: 200),
-                          constraints: BoxConstraints(
-                            maxWidth:
-                                220, // Conserver pour un look plus spacieux
+                          duration: const Duration(milliseconds: 200),
+                          constraints: const BoxConstraints(maxWidth: 200),
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 10,
+                            horizontal: 20,
                           ),
-                          padding: EdgeInsets.symmetric(
-                              vertical: 12,
-                              horizontal: 20), // Conserver pour un look premium
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
                               colors: [
                                 _isButtonHovered
-                                    ? Color(0xFF1E7C7B)
-                                    : Color(0xFF26A69A),
+                                    ? const Color(0xFF1E7C7B)
+                                    : const Color(0xFF26A69A),
                                 _isButtonHovered
-                                    ? Color(0xFF4DB6AC)
-                                    : Color(0xFF66BB6A)
+                                    ? const Color(0xFF4DB6AC)
+                                    : const Color(0xFF66BB6A),
                               ],
                               begin: Alignment.topLeft,
                               end: Alignment.bottomRight,
                             ),
-                            borderRadius: BorderRadius.circular(
-                                24), // Bords arrondis comme dans l’image
+                            borderRadius: BorderRadius.circular(20),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withValues(alpha: 0.1),
-                                blurRadius:
-                                    6, // Conserver pour un effet 3D premium
-                                offset: Offset(0, 2),
+                                color: Colors.black.withOpacity(0.1),
+                                blurRadius: 6,
+                                offset: const Offset(0, 2),
                               ),
                             ],
                           ),
-                          child: Text(
+                          child: const Text(
                             "Lire plus",
                             style: TextStyle(
                               color: Colors.white,
-                              fontSize: 16,
+                              fontSize: 14,
                               fontWeight: FontWeight.bold,
                             ),
+                            textAlign: TextAlign.center,
                           ),
                         ),
                       ),

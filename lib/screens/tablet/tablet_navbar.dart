@@ -25,8 +25,8 @@ class _TabletNavBarState extends State<TabletNavBar> {
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              Color(0xFF1976D2), // Bleu médical foncé
-              Color(0xFF66BB6A) // Vert émeraude
+              Color(0xFF2E7D32), // Vert médical profond
+              Color(0xFF1976D2), // Bleu profond (medical blue)
             ], // Dégradé bleu virant au vert médical
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
