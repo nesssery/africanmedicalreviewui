@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:africanmedicalreview/controllers/auth_controller.dart';
-import 'package:google_fonts/google_fonts.dart'; // Ajout pour Poppins (si non déjà présent)
+import 'package:google_fonts/google_fonts.dart';
 
 class AccountPage extends StatefulWidget {
   const AccountPage({Key? key}) : super(key: key);
@@ -18,24 +18,21 @@ class _AccountPageState extends State<AccountPage>
   final TextEditingController titleController = TextEditingController();
   late AnimationController _animationController;
   late Animation<double> _opacityAnimation;
-  bool _isHovered = false; // État hover pour les boutons
+  bool _isHovered = false;
 
   @override
   void initState() {
     super.initState();
-    // Pré-remplir les champs avec les infos actuelles de l'utilisateur
     usernameController.text = authController.username.value;
     titleController.text = authController.userTitle.value;
     _animationController = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 500), // Animation d’entrée fluide
+      duration: const Duration(milliseconds: 500),
     );
     _opacityAnimation = Tween<double>(begin: 1.0, end: 1.0).animate(
-      // Changé begin: 1.0 pour affichage immédiat
       CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
     );
     _animationController.forward();
-    // Débogage pour vérifier les données initiales
     debugPrint(
         "Username: ${authController.username.value}, Title: ${authController.userTitle.value}, Email: ${authController.userEmail.value}");
   }
@@ -48,19 +45,21 @@ class _AccountPageState extends State<AccountPage>
     super.dispose();
   }
 
-  /// ✅ Widget pour afficher une section avec un titre
+  /// Widget pour afficher une section avec un titre
   Widget _buildSection({required String title, required Widget child}) {
     return AnimatedOpacity(
       opacity: _opacityAnimation.value,
-      duration: Duration(milliseconds: 500),
+      duration: const Duration(milliseconds: 500),
       child: Container(
         width: double.infinity,
-        padding: EdgeInsets.all(15),
+        padding: const EdgeInsets.all(15),
+        margin:
+            const EdgeInsets.symmetric(vertical: 8), // Marge pour espacement
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              Color(0xFF4CAF50).withOpacity(0.1), // Vert médical clair
-              Color(0xFF81C784).withOpacity(0.1), // Vert émeraude clair
+              const Color(0xFF4CAF50).withOpacity(0.1),
+              const Color(0xFF81C784).withOpacity(0.1),
             ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
@@ -68,15 +67,14 @@ class _AccountPageState extends State<AccountPage>
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.05),
+              color: Colors.black.withOpacity(0.05),
               blurRadius: 4,
-              offset: Offset(0, 2),
+              offset: const Offset(0, 2),
             ),
           ],
         ),
         child: Column(
-          crossAxisAlignment:
-              CrossAxisAlignment.center, // Centré horizontalement
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
               title,
@@ -86,7 +84,7 @@ class _AccountPageState extends State<AccountPage>
                 color: Colors.blue.shade800,
               ),
             ),
-            SizedBox(height: 12),
+            const SizedBox(height: 12),
             child,
           ],
         ),
@@ -94,38 +92,44 @@ class _AccountPageState extends State<AccountPage>
     );
   }
 
-  /// ✅ Widget pour un champ de texte
+  /// Widget pour un champ de texte
   Widget _buildTextField(String label, TextEditingController controller,
       {bool readOnly = false}) {
+    // Ajuster la largeur en fonction de la taille de l'écran
+    double screenWidth = MediaQuery.of(context).size.width;
+    double fieldWidth = screenWidth > 600
+        ? 350
+        : screenWidth * 0.8; // 80% de la largeur sur petits écrans
+
     return SizedBox(
-      width: MediaQuery.of(context).size.width > 600 ? 350 : 300,
+      width: fieldWidth.clamp(300, 350), // Limiter entre 300 et 350
       child: MouseRegion(
         cursor: readOnly ? SystemMouseCursors.basic : SystemMouseCursors.click,
         onEnter: readOnly ? null : (_) => setState(() => _isHovered = true),
         onExit: readOnly ? null : (_) => setState(() => _isHovered = false),
         child: AnimatedContainer(
-          duration: Duration(milliseconds: 200),
+          duration: const Duration(milliseconds: 200),
           decoration: BoxDecoration(
             color: readOnly ? Colors.grey.shade200 : Colors.white,
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
               color: readOnly
-                  ? Color(0xFF4DB6AC)
+                  ? const Color(0xFF4DB6AC)
                   : _isHovered
-                      ? Color(0xFF4DB6AC)
+                      ? const Color(0xFF4DB6AC)
                       : Colors.grey.shade300,
               width: 2,
             ),
             boxShadow: [
               BoxShadow(
                 color: Colors.black
-                    .withValues(alpha: _isHovered && !readOnly ? 0.15 : 0.05),
+                    .withOpacity(_isHovered && !readOnly ? 0.15 : 0.05),
                 blurRadius: 4,
-                offset: Offset(0, 2),
+                offset: const Offset(0, 2),
               ),
             ],
           ),
-          padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
           child: TextField(
             controller: controller,
             readOnly: readOnly,
@@ -144,7 +148,7 @@ class _AccountPageState extends State<AccountPage>
                           : label == "Email"
                               ? Icons.email
                               : Icons.work_outline,
-                      color: Color(0xFF4DB6AC),
+                      color: const Color(0xFF4DB6AC),
                     ),
             ),
             style: GoogleFonts.poppins(fontSize: 16, color: Colors.black87),
@@ -154,52 +158,52 @@ class _AccountPageState extends State<AccountPage>
     );
   }
 
-  /// ✅ Widget pour créer un bouton avec un gradient ou couleur
+  /// Widget pour créer un bouton avec un gradient ou couleur
   Widget _buildButton(String text, Color baseColor, VoidCallback onPressed) {
     final isGreenOrBlue =
         baseColor == Colors.green.shade600 || baseColor == Colors.blue.shade600;
+    double screenWidth = MediaQuery.of(context).size.width;
+    double buttonWidth = screenWidth > 600 ? 350 : screenWidth * 0.8;
+
     return SizedBox(
-      width: MediaQuery.of(context).size.width > 600 ? 350 : 300,
+      width: buttonWidth.clamp(300, 350),
       height: 50,
       child: MouseRegion(
         cursor: SystemMouseCursors.click,
         onEnter: (_) => setState(() => _isHovered = true),
         onExit: (_) => setState(() => _isHovered = false),
         child: AnimatedContainer(
-          duration: Duration(milliseconds: 200),
+          duration: const Duration(milliseconds: 200),
           decoration: BoxDecoration(
             gradient: isGreenOrBlue
                 ? LinearGradient(
                     colors: [
                       _isHovered
-                          ? Color(0xFF26A69A)
-                          : Color(0xFF4CAF50), // Vert médical clair au hover
+                          ? const Color(0xFF26A69A)
+                          : const Color(0xFF4CAF50),
                       _isHovered
-                          ? Color(0xFF4DB6AC)
-                          : Color(0xFF81C784), // Vert émeraude au hover
+                          ? const Color(0xFF4DB6AC)
+                          : const Color(0xFF81C784),
                     ],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   )
                 : null,
-            color: !isGreenOrBlue
-                ? Colors.red.shade600
-                : null, // Rouge pour "Se Déconnecter"
+            color: !isGreenOrBlue ? Colors.red.shade600 : null,
             borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: _isHovered ? 0.15 : 0.05),
+                color: Colors.black.withOpacity(_isHovered ? 0.15 : 0.05),
                 blurRadius: 4,
-                offset: Offset(0, 2),
+                offset: const Offset(0, 2),
               ),
             ],
           ),
           child: ElevatedButton(
             onPressed: onPressed,
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors
-                  .transparent, // Fond transparent pour le dégradé/couleur
-              elevation: 0, // Pas d’élévation par défaut
+              backgroundColor: Colors.transparent,
+              elevation: 0,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
@@ -220,7 +224,6 @@ class _AccountPageState extends State<AccountPage>
 
   @override
   Widget build(BuildContext context) {
-    // Débogage pour vérifier si le build est appelé
     debugPrint("Building AccountPage");
 
     return Scaffold(
@@ -228,71 +231,70 @@ class _AccountPageState extends State<AccountPage>
         title: Text(
           "Mon Compte",
           style: GoogleFonts.poppins(
-            fontSize: 24, // Ajusté pour lisibilité
+            fontSize: 24,
             fontWeight: FontWeight.bold,
             color: Colors.white,
           ),
         ),
-        backgroundColor:
-            null, // Supprimer la couleur unie pour utiliser le dégradé
+        backgroundColor: null,
         flexibleSpace: Container(
           decoration: BoxDecoration(
-            gradient: LinearGradient(
+            gradient: const LinearGradient(
               colors: [
-                Color(0xFF1976D2), // Bleu médical foncé
-                Color(0xFF66BB6A) // Vert émeraude
-              ], // Dégradé bleu virant au vert médical
+                Color(0xFF1976D2),
+                Color(0xFF66BB6A),
+              ],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: 0.1),
+                color: Colors.black.withOpacity(0.1),
                 blurRadius: 4,
-                offset: Offset(0, 2),
+                offset: const Offset(0, 2),
               ),
             ],
           ),
         ),
-        elevation: 4, // Ombre légère pour un effet premium
+        elevation: 4,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios, color: Colors.white, size: 24),
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.white, size: 24),
           onPressed: () => Get.offAllNamed('/'),
         ),
       ),
-      body: Center(
-        // Centré verticalement et horizontalement
+      body: SingleChildScrollView(
+        // Ajout pour permettre le défilement
         child: Padding(
           padding: EdgeInsets.symmetric(
-              horizontal: 16, vertical: 20), // Ajusté pour un look aéré
+            horizontal: MediaQuery.of(context).size.width > 600
+                ? 40
+                : 16, // Plus d'espace sur grands écrans
+            vertical: 20,
+          ),
           child: Column(
-            mainAxisSize: MainAxisSize.min, // Limite la hauteur pour centrer
-            crossAxisAlignment:
-                CrossAxisAlignment.center, // Centré horizontalement
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              // ✅ Section : Informations Personnelles
+              // Section : Informations Personnelles
               _buildSection(
                 title: "Informations Personnelles",
                 child: Column(
-                  mainAxisAlignment:
-                      MainAxisAlignment.center, // Centré horizontalement
-                  crossAxisAlignment:
-                      CrossAxisAlignment.center, // Centré horizontalement
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     _buildTextField("Nom d'utilisateur", usernameController),
-                    SizedBox(height: 15),
+                    const SizedBox(height: 15),
                     _buildTextField(
-                        "Email",
-                        TextEditingController(
-                            text: authController.userEmail.value),
-                        readOnly: true),
-                    SizedBox(height: 15),
+                      "Email",
+                      TextEditingController(
+                          text: authController.userEmail.value),
+                      readOnly: true,
+                    ),
+                    const SizedBox(height: 15),
                     _buildTextField("Titre", titleController),
-                    SizedBox(height: 20),
-
-                    // ✅ Bouton de mise à jour avec design premium
+                    const SizedBox(height: 20),
                     Obx(() => authController.isLoading.value
-                        ? Center(
+                        ? const Center(
                             child: CircularProgressIndicator(
                               valueColor: AlwaysStoppedAnimation<Color>(
                                   Color(0xFF4DB6AC)),
@@ -309,35 +311,37 @@ class _AccountPageState extends State<AccountPage>
                   ],
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
 
-              // ✅ Section : Soumission d'article (Affiché seulement si isEditorOrReader est true)
+              // Section : Soumission d'article
               Obx(() => authController.isEditorOrReader.value
                   ? _buildSection(
                       title: "Soumission d'article",
                       child: Center(
-                        // Centré horizontalement
                         child: _buildButton(
                             "Soumettre un article", Colors.blue.shade600, () {
-                          Get.toNamed('/submit-article'); // ✅ Redirection
+                          Get.toNamed('/submit-article');
                         }),
                       ),
                     )
-                  : SizedBox.shrink()),
+                  : const SizedBox.shrink()),
 
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
 
-              // ✅ Section : Actions
+              // Section : Actions
               _buildSection(
                 title: "Actions",
                 child: Center(
-                  // Centré horizontalement
                   child:
                       _buildButton("Se Déconnecter", Colors.red.shade600, () {
                     authController.logout();
                   }),
                 ),
               ),
+
+              const SizedBox(
+                  height:
+                      20), // Espace supplémentaire en bas pour le défilement
             ],
           ),
         ),
