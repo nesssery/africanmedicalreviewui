@@ -1,7 +1,8 @@
+import 'package:africanmedicalreview/widgets/custom_scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:africanmedicalreview/controllers/auth_controller.dart';
-import 'package:google_fonts/google_fonts.dart'; // Ajout pour Poppins (si non déjà présent);
+import 'package:google_fonts/google_fonts.dart';
 
 class InscriptionPage extends StatefulWidget {
   const InscriptionPage({Key? key}) : super(key: key);
@@ -22,21 +23,19 @@ class _InscriptionPageState extends State<InscriptionPage>
   var isPasswordVisible = false.obs;
   late AnimationController _animationController;
   late Animation<double> _opacityAnimation;
-  bool _isHovered = false; // État hover pour les boutons
+  bool _isHovered = false;
 
   @override
   void initState() {
     super.initState();
     _animationController = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 500), // Animation d’entrée fluide
+      duration: Duration(milliseconds: 500),
     );
     _opacityAnimation = Tween<double>(begin: 1.0, end: 1.0).animate(
-      // Changé begin: 1.0 pour affichage immédiat
       CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
     );
     _animationController.forward();
-    // Débogage pour vérifier l'initialisation de AuthController
     debugPrint("AuthController initialized: $authController");
     debugPrint(
         "isEditorOrReader: $isEditorOrReader, isPasswordVisible: $isPasswordVisible");
@@ -52,7 +51,6 @@ class _InscriptionPageState extends State<InscriptionPage>
     super.dispose();
   }
 
-  /// ✅ Fonction pour obtenir le message d'erreur en fonction du code
   String getErrorMessage(String code) {
     switch (code) {
       case "415":
@@ -68,7 +66,6 @@ class _InscriptionPageState extends State<InscriptionPage>
     }
   }
 
-  /// ✅ Widget pour construire un champ de texte générique
   Widget buildTextField(TextEditingController controller, String label,
       {bool isEmail = false, IconData? icon}) {
     return SizedBox(
@@ -104,7 +101,6 @@ class _InscriptionPageState extends State<InscriptionPage>
     );
   }
 
-  /// ✅ Widget pour le champ de mot de passe avec visibilité
   Widget buildPasswordField() {
     return SizedBox(
       width: MediaQuery.of(context).size.width > 600 ? 350 : 300,
@@ -147,7 +143,6 @@ class _InscriptionPageState extends State<InscriptionPage>
     );
   }
 
-  /// ✅ Widget pour construire un bouton avec un gradient
   Widget buildGradientButton(
       {required VoidCallback onPressed, required String text}) {
     return SizedBox(
@@ -161,12 +156,8 @@ class _InscriptionPageState extends State<InscriptionPage>
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [
-                _isHovered
-                    ? Color(0xFF26A69A)
-                    : Color(0xFF4CAF50), // Vert médical clair au hover
-                _isHovered
-                    ? Color(0xFF4DB6AC)
-                    : Color(0xFF81C784), // Vert émeraude au hover
+                _isHovered ? Color(0xFF26A69A) : Color(0xFF4CAF50),
+                _isHovered ? Color(0xFF4DB6AC) : Color(0xFF81C784),
               ],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
@@ -183,9 +174,8 @@ class _InscriptionPageState extends State<InscriptionPage>
           child: ElevatedButton(
             onPressed: onPressed,
             style: ElevatedButton.styleFrom(
-              backgroundColor:
-                  Colors.transparent, // Fond transparent pour le dégradé
-              elevation: 0, // Pas d’élévation par défaut
+              backgroundColor: Colors.transparent,
+              elevation: 0,
               padding: EdgeInsets.symmetric(vertical: 14),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
@@ -205,7 +195,6 @@ class _InscriptionPageState extends State<InscriptionPage>
     );
   }
 
-  /// ✅ Widget pour construire un bouton "Se connecter"
   Widget buildOutlinedButton(
       {required VoidCallback onPressed, required String text}) {
     return SizedBox(
@@ -233,7 +222,7 @@ class _InscriptionPageState extends State<InscriptionPage>
           child: OutlinedButton(
             onPressed: onPressed,
             style: OutlinedButton.styleFrom(
-              backgroundColor: Colors.transparent, // Fond transparent
+              backgroundColor: Colors.transparent,
               padding: EdgeInsets.symmetric(vertical: 14),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
@@ -255,28 +244,26 @@ class _InscriptionPageState extends State<InscriptionPage>
 
   @override
   Widget build(BuildContext context) {
-    // Débogage pour vérifier si le build est appelé
     debugPrint("Building InscriptionPage");
 
-    return Scaffold(
+    return CustomScaffold(
       appBar: AppBar(
         title: Text(
           "AFRICAN MEDICAL REVIEW",
           style: GoogleFonts.poppins(
-            fontSize: 24, // Ajusté pour lisibilité
+            fontSize: 24,
             fontWeight: FontWeight.bold,
             color: Colors.white,
           ),
         ),
-        backgroundColor:
-            null, // Supprimer la couleur unie pour utiliser le dégradé
+        backgroundColor: null,
         flexibleSpace: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [
-                Color(0xFF1976D2), // Bleu médical foncé
-                Color(0xFF66BB6A) // Vert émeraude
-              ], // Dégradé bleu virant au vert médical
+                Color(0xFF1976D2),
+                Color(0xFF66BB6A),
+              ],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
@@ -289,7 +276,7 @@ class _InscriptionPageState extends State<InscriptionPage>
             ],
           ),
         ),
-        elevation: 4, // Ombre légère pour un effet premium
+        elevation: 4,
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios, color: Colors.white, size: 24),
           onPressed: () => Get.offAllNamed('/home'),
@@ -297,26 +284,23 @@ class _InscriptionPageState extends State<InscriptionPage>
       ),
       body: AnimatedOpacity(
         opacity: _opacityAnimation.value,
-        duration: Duration(milliseconds: 500), // Animation d’entrée fluide
+        duration: Duration(milliseconds: 500),
         child: Center(
           child: SingleChildScrollView(
             child: Padding(
-              padding: EdgeInsets.symmetric(
-                  horizontal: 16, vertical: 20), // Ajusté pour un look aéré
+              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
                     "Formulaire d'inscription",
                     style: GoogleFonts.poppins(
-                      fontSize: 28, // Augmenté pour un impact visuel
+                      fontSize: 28,
                       fontWeight: FontWeight.bold,
                       color: Colors.black87,
                     ),
                   ),
                   SizedBox(height: 30),
-
-                  // 📌 Affichage des erreurs avec design premium
                   Obx(() => authController.errorCodes.isNotEmpty
                       ? Padding(
                           padding: const EdgeInsets.only(bottom: 20),
@@ -356,27 +340,17 @@ class _InscriptionPageState extends State<InscriptionPage>
                           ),
                         )
                       : SizedBox.shrink()),
-
-                  // 📌 Champ Nom d'utilisateur
                   buildTextField(usernameController, "Nom d'utilisateur",
                       icon: Icons.person),
                   SizedBox(height: 15),
-
-                  // 📌 Champ Email
                   buildTextField(emailController, "Email",
                       isEmail: true, icon: Icons.email),
                   SizedBox(height: 15),
-
-                  // 📌 Champ Mot de Passe avec visibilité
                   buildPasswordField(),
                   SizedBox(height: 15),
-
-                  // 📌 Champ Titre
                   buildTextField(titleController, "Titre",
                       icon: Icons.work_outline),
                   SizedBox(height: 15),
-
-                  // 📌 Switch Éditeur/Lecteur avec design premium
                   SizedBox(
                     width: MediaQuery.of(context).size.width > 600 ? 350 : 300,
                     child: Obx(() => SwitchListTile(
@@ -392,7 +366,7 @@ class _InscriptionPageState extends State<InscriptionPage>
                           onChanged: (bool value) {
                             isEditorOrReader.value = value;
                           },
-                          activeColor: Color(0xFF4DB6AC), // Vert médical
+                          activeColor: Color(0xFF4DB6AC),
                           tileColor: Colors.grey[100],
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
@@ -400,8 +374,6 @@ class _InscriptionPageState extends State<InscriptionPage>
                         )),
                   ),
                   SizedBox(height: 20),
-
-                  // 📌 Bouton d'inscription avec design premium
                   Obx(
                     () => authController.isLoading.value
                         ? Center(
@@ -424,14 +396,10 @@ class _InscriptionPageState extends State<InscriptionPage>
                             text: "S'inscrire",
                           ),
                   ),
-
                   SizedBox(height: 15),
-
-                  // 📌 Bouton "Se connecter" avec design premium
                   buildOutlinedButton(
                     onPressed: () {
-                      Get.toNamed(
-                          "/login"); // ✅ Rediriger vers la page de connexion
+                      Get.toNamed("/login");
                     },
                     text: "Se connecter",
                   ),

@@ -1,7 +1,8 @@
+import 'package:africanmedicalreview/widgets/custom_scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:africanmedicalreview/controllers/auth_controller.dart';
-import 'package:google_fonts/google_fonts.dart'; // Ajout pour Poppins (si non déjà présent)
+import 'package:google_fonts/google_fonts.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -12,29 +13,25 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage>
     with SingleTickerProviderStateMixin {
-  final AuthController authController =
-      Get.find(); // ✅ Récupère l'instance existante
-
+  final AuthController authController = Get.find();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   var isPasswordVisible = false.obs;
   late AnimationController _animationController;
   late Animation<double> _opacityAnimation;
-  bool _isHovered = false; // État hover pour les boutons/liens
+  bool _isHovered = false;
 
   @override
   void initState() {
     super.initState();
     _animationController = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 500), // Animation d’entrée fluide
+      duration: Duration(milliseconds: 500),
     );
     _opacityAnimation = Tween<double>(begin: 1.0, end: 1.0).animate(
-      // Changé begin: 1.0 pour affichage immédiat
       CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
     );
     _animationController.forward();
-    // Débogage pour vérifier l'initialisation de AuthController
     debugPrint("AuthController initialized: $authController");
     debugPrint("isPasswordVisible: $isPasswordVisible");
   }
@@ -47,7 +44,6 @@ class _LoginPageState extends State<LoginPage>
     super.dispose();
   }
 
-  /// ✅ Widget pour construire un champ de texte générique
   Widget buildTextField(TextEditingController controller, String label,
       {bool isEmail = false, IconData? icon}) {
     return SizedBox(
@@ -83,7 +79,6 @@ class _LoginPageState extends State<LoginPage>
     );
   }
 
-  /// ✅ Widget pour le champ de mot de passe avec visibilité
   Widget buildPasswordField() {
     return SizedBox(
       width: MediaQuery.of(context).size.width > 600 ? 350 : 300,
@@ -126,7 +121,6 @@ class _LoginPageState extends State<LoginPage>
     );
   }
 
-  /// ✅ Widget pour construire un bouton avec un gradient
   Widget buildGradientButton(
       {required VoidCallback onPressed, required String text}) {
     return SizedBox(
@@ -140,12 +134,8 @@ class _LoginPageState extends State<LoginPage>
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [
-                _isHovered
-                    ? Color(0xFF26A69A)
-                    : Color(0xFF4CAF50), // Vert médical clair au hover
-                _isHovered
-                    ? Color(0xFF4DB6AC)
-                    : Color(0xFF81C784), // Vert émeraude au hover
+                _isHovered ? Color(0xFF26A69A) : Color(0xFF4CAF50),
+                _isHovered ? Color(0xFF4DB6AC) : Color(0xFF81C784),
               ],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
@@ -162,9 +152,8 @@ class _LoginPageState extends State<LoginPage>
           child: ElevatedButton(
             onPressed: onPressed,
             style: ElevatedButton.styleFrom(
-              backgroundColor:
-                  Colors.transparent, // Fond transparent pour le dégradé
-              elevation: 0, // Pas d’élévation par défaut
+              backgroundColor: Colors.transparent,
+              elevation: 0,
               padding: EdgeInsets.symmetric(vertical: 14),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
@@ -184,7 +173,6 @@ class _LoginPageState extends State<LoginPage>
     );
   }
 
-  /// ✅ Widget pour construire un lien "Créer un compte"
   Widget buildTextButton(
       {required VoidCallback onPressed, required String text}) {
     return MouseRegion(
@@ -210,28 +198,26 @@ class _LoginPageState extends State<LoginPage>
 
   @override
   Widget build(BuildContext context) {
-    // Débogage pour vérifier si le build est appelé
     debugPrint("Building LoginPage");
 
-    return Scaffold(
+    return CustomScaffold(
       appBar: AppBar(
         title: Text(
           "Connexion",
           style: GoogleFonts.poppins(
-            fontSize: 24, // Ajusté pour lisibilité
+            fontSize: 24,
             fontWeight: FontWeight.bold,
             color: Colors.white,
           ),
         ),
-        backgroundColor:
-            null, // Supprimer la couleur unie pour utiliser le dégradé
+        backgroundColor: null,
         flexibleSpace: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [
-                Color(0xFF1976D2), // Bleu médical foncé
-                Color(0xFF66BB6A) // Vert émeraude
-              ], // Dégradé bleu virant au vert médical
+                Color(0xFF1976D2),
+                Color(0xFF66BB6A),
+              ],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
@@ -244,7 +230,7 @@ class _LoginPageState extends State<LoginPage>
             ],
           ),
         ),
-        elevation: 4, // Ombre légère pour un effet premium
+        elevation: 4,
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios, color: Colors.white, size: 24),
           onPressed: () => Get.back(),
@@ -252,26 +238,23 @@ class _LoginPageState extends State<LoginPage>
       ),
       body: AnimatedOpacity(
         opacity: _opacityAnimation.value,
-        duration: Duration(milliseconds: 500), // Animation d’entrée fluide
+        duration: Duration(milliseconds: 500),
         child: Center(
           child: SingleChildScrollView(
             child: Padding(
-              padding: EdgeInsets.symmetric(
-                  horizontal: 16, vertical: 20), // Ajusté pour un look aéré
+              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
                     "Connexion à votre compte",
                     style: GoogleFonts.poppins(
-                      fontSize: 28, // Augmenté pour un impact visuel
+                      fontSize: 28,
                       fontWeight: FontWeight.bold,
                       color: Colors.black87,
                     ),
                   ),
                   SizedBox(height: 30),
-
-                  // 📌 Affichage des erreurs avec design premium
                   Obx(() => authController.loginError.isNotEmpty
                       ? Padding(
                           padding: const EdgeInsets.only(bottom: 20),
@@ -305,16 +288,10 @@ class _LoginPageState extends State<LoginPage>
                           ),
                         )
                       : SizedBox.shrink()),
-
-                  // 📌 Champ Email
                   buildTextField(emailController, "Email", icon: Icons.email),
                   SizedBox(height: 15),
-
-                  // 📌 Champ Mot de Passe avec visibilité
                   buildPasswordField(),
                   SizedBox(height: 15),
-
-                  // 📌 Bouton Connexion avec design premium
                   Obx(
                     () => authController.isLoading.value
                         ? Center(
@@ -334,13 +311,10 @@ class _LoginPageState extends State<LoginPage>
                             text: "Se connecter",
                           ),
                   ),
-
                   SizedBox(height: 15),
-
-                  // 📌 Lien "Créer un compte" avec design premium
                   buildTextButton(
                     onPressed: () {
-                      Get.toNamed("/signup"); // ✅ Redirige vers l'inscription
+                      Get.toNamed("/signup");
                     },
                     text: "Créer un compte",
                   ),

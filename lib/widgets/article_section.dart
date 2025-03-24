@@ -20,7 +20,6 @@ class _ArticleSectionState extends State<ArticleSection> {
     fetchArticles();
   }
 
-  /// 🔍 Filtrage dynamique des articles en fonction de la recherche utilisateur
   void filterArticles(String query) {
     setState(() {
       filteredArticles = articles
@@ -33,15 +32,13 @@ class _ArticleSectionState extends State<ArticleSection> {
     });
   }
 
-  /// ✅ Récupération des 10 derniers articles via l'API
   Future<void> fetchArticles() async {
     try {
       List<Map<String, dynamic>> fetchedArticles =
           await ApiService.fetchLatestArticles();
       setState(() {
         articles = fetchedArticles;
-        filteredArticles =
-            fetchedArticles; // ✅ Initialise avec tous les articles
+        filteredArticles = fetchedArticles;
         isLoading = false;
       });
     } catch (e) {
@@ -57,35 +54,33 @@ class _ArticleSectionState extends State<ArticleSection> {
     double screenWidth = MediaQuery.of(context).size.width;
     int crossAxisCount = screenWidth < 700 ? 1 : (screenWidth < 1024 ? 2 : 3);
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
+    return Container(
+      constraints: BoxConstraints(maxWidth: 1200), // Limite la largeur maximale
+      padding:
+          const EdgeInsets.symmetric(vertical: 20), // Garde le padding vertical
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // 🏷 Titre de la section avec nouvelle couleur
           Text(
             "Articles Récents",
             style: TextStyle(
               fontSize: 26,
               fontWeight: FontWeight.bold,
-              color: Color(0xFF26A69A), // Teal médical pour cohérence
+              color: Color(0xFF26A69A),
             ),
           ),
           SizedBox(height: 10),
-
-          // 🔎 Champ de recherche large avec design amélioré
           MouseRegion(
             cursor: SystemMouseCursors.click,
             onEnter: (_) => setState(() => _isHovered = true),
             onExit: (_) => setState(() => _isHovered = false),
             child: AnimatedContainer(
               duration: Duration(milliseconds: 200),
-              width: double.infinity, // Largeur maximale pour grand écran
+              width: double.infinity,
               child: TextField(
                 controller: searchController,
-                onChanged:
-                    filterArticles, // ✅ Met à jour la liste en temps réel
-                onTap: () => setState(() {}), // Activer l’animation au focus
+                onChanged: filterArticles,
+                onTap: () => setState(() {}),
                 decoration: InputDecoration(
                   hintText: "Rechercher un article...",
                   hintStyle: TextStyle(
@@ -102,30 +97,21 @@ class _ArticleSectionState extends State<ArticleSection> {
                     ),
                   ),
                   border: OutlineInputBorder(
-                    borderRadius:
-                        BorderRadius.circular(15), // Bordures plus arrondies
-                    borderSide: BorderSide(
-                        color: Color(0xFF26A69A),
-                        width: 2), // Teal pour la bordure
+                    borderRadius: BorderRadius.circular(15),
+                    borderSide: BorderSide(color: Color(0xFF26A69A), width: 2),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(15),
-                    borderSide: BorderSide(
-                        color: Color(0xFF26A69A),
-                        width: 2), // Teal plus marqué au focus
+                    borderSide: BorderSide(color: Color(0xFF26A69A), width: 2),
                   ),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(15),
-                    borderSide: BorderSide(
-                        color: Color(0xFF26A69A),
-                        width: 2), // Teal pour l’état normal
+                    borderSide: BorderSide(color: Color(0xFF26A69A), width: 2),
                   ),
                   filled: true,
-                  fillColor:
-                      Colors.white, // Fond blanc pour un contraste optimal
-                  contentPadding: EdgeInsets.symmetric(
-                      vertical: 14,
-                      horizontal: 16), // Padding accru pour un look premium
+                  fillColor: Colors.white,
+                  contentPadding:
+                      EdgeInsets.symmetric(vertical: 14, horizontal: 16),
                 ),
                 style: TextStyle(
                   fontSize: 16,
@@ -135,8 +121,6 @@ class _ArticleSectionState extends State<ArticleSection> {
             ),
           ),
           SizedBox(height: 20),
-
-          // 🔄 Loader ou affichage des articles
           if (isLoading)
             Center(child: CircularProgressIndicator())
           else if (filteredArticles.isEmpty)

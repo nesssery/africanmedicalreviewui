@@ -1,5 +1,6 @@
 import 'package:africanmedicalreview/screens/desktop/header_section.dart';
 import 'package:africanmedicalreview/widgets/article_section.dart';
+import 'package:africanmedicalreview/widgets/custom_scaffold.dart';
 import 'package:africanmedicalreview/widgets/footer.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -11,17 +12,26 @@ class DesktopHome extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return CustomScaffold(
+      appBar: TopNavBar(), // Passe TopNavBar comme appBar
       body: Column(
         children: [
-          TopNavBar(), // ✅ Barre de navigation fixe
           Expanded(
             child: SingleChildScrollView(
-              // ✅ Ajout du scroll
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  HeaderSection(), // ✅ Section avec gradient
-                  ArticleSection(), // ✅ Articles scrollables
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 48.0), // Marge de 48 pixels
+                    child: Column(
+                      children: [
+                        HeaderSection(), // Section avec gradient
+                        ArticleSection(), // Articles scrollables
+                      ],
+                    ),
+                  ),
+                  // Le Footer est dans le flux naturel, plus besoin de Stack ou Positioned
                   Footer(),
                 ],
               ),

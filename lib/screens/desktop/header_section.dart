@@ -37,24 +37,10 @@ class _HeaderSectionState extends State<HeaderSection>
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 100, vertical: 50),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            Color(0xFF2E7D32), // Vert médical profond
-            Color(0xFF1976D2), // Bleu profond (medical blue)
-          ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
-            blurRadius: 10,
-            offset: Offset(0, 4),
-          ),
-        ],
-      ),
+      constraints: BoxConstraints(maxWidth: 1200), // Limite la largeur maximale
+      padding:
+          const EdgeInsets.symmetric(vertical: 50), // Garde le padding vertical
+      // La propriété decoration est supprimée pour retirer le background
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
@@ -76,7 +62,7 @@ class _HeaderSectionState extends State<HeaderSection>
                   loadingBuilder: (BuildContext context, Widget child,
                       ImageChunkEvent? loadingProgress) {
                     if (loadingProgress == null) {
-                      return child; // Image chargée, afficher l'image
+                      return child;
                     }
                     return Container(
                       width: 450,
@@ -86,8 +72,8 @@ class _HeaderSectionState extends State<HeaderSection>
                           value: loadingProgress.expectedTotalBytes != null
                               ? loadingProgress.cumulativeBytesLoaded /
                                   (loadingProgress.expectedTotalBytes ?? 1)
-                              : null, // Progression ou indéterminé
-                          color: Colors.white, // Couleur assortie au thème
+                              : null,
+                          color: Colors.black, // Ajuste la couleur du loader
                         ),
                       ),
                     );
@@ -121,14 +107,8 @@ class _HeaderSectionState extends State<HeaderSection>
                   style: TextStyle(
                     fontSize: 36,
                     fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                    shadows: [
-                      Shadow(
-                        blurRadius: 2.0,
-                        color: Colors.black.withValues(alpha: 0.5),
-                        offset: Offset(1.0, 1.0),
-                      ),
-                    ],
+                    color: Colors.black, // Change la couleur en noir
+                    // Supprime les ombres
                   ),
                 ),
                 SizedBox(height: 20),
@@ -137,15 +117,9 @@ class _HeaderSectionState extends State<HeaderSection>
                   "Suspendisse viverra, ante in eleifend vulputate, lacus lorem pretium ligula, tincidunt posuere sapien.",
                   style: TextStyle(
                     fontSize: 24,
-                    color: Colors.white,
+                    color: Colors.black, // Change la couleur en noir
                     height: 1.5,
-                    shadows: [
-                      Shadow(
-                        blurRadius: 1.0,
-                        color: Colors.black.withValues(alpha: 0.3),
-                        offset: Offset(0, 1),
-                      ),
-                    ],
+                    // Supprime les ombres
                   ),
                 ),
               ],

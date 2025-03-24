@@ -39,7 +39,8 @@ class _FooterState extends State<Footer> with SingleTickerProviderStateMixin {
     return FadeTransition(
       opacity: _fadeAnimation,
       child: Container(
-        padding: EdgeInsets.all(isMobile ? 20 : 40),
+        width: double.infinity, // Force le Container à prendre toute la largeur
+        padding: EdgeInsets.symmetric(vertical: isMobile ? 20 : 40),
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [
@@ -50,7 +51,13 @@ class _FooterState extends State<Footer> with SingleTickerProviderStateMixin {
             end: Alignment.bottomRight,
           ),
         ),
-        child: isMobile ? _buildMobileLayout() : _buildDesktopLayout(),
+        child: Center(
+          // Centre le Container intérieur
+          child: Container(
+            constraints: BoxConstraints(maxWidth: 1200),
+            child: isMobile ? _buildMobileLayout() : _buildDesktopLayout(),
+          ),
+        ),
       ),
     );
   }
@@ -85,11 +92,10 @@ class _FooterState extends State<Footer> with SingleTickerProviderStateMixin {
         Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // Icône médicale (croix) comme demandé précédemment
             Icon(
               FontAwesomeIcons.plus,
               size: 28,
-              color: Color(0xFFFF6B6B), // Rouge pour le contraste
+              color: Color(0xFFFF6B6B),
             ),
             SizedBox(width: 12),
             Text(
@@ -107,8 +113,7 @@ class _FooterState extends State<Footer> with SingleTickerProviderStateMixin {
           "Connecting African Healthcare",
           style: GoogleFonts.montserrat(
             fontSize: 16,
-            color: Colors
-                .white70, // Ajusté pour contraster avec le dégradé vert-bleu
+            color: Colors.white70,
           ),
         ),
       ],
@@ -154,7 +159,7 @@ class _FooterState extends State<Footer> with SingleTickerProviderStateMixin {
           "info@amrhealth.org",
           style: GoogleFonts.montserrat(
             fontSize: 16,
-            color: Colors.white70, // Ajusté pour contraster avec le dégradé
+            color: Colors.white70,
           ),
         ),
         SizedBox(height: 12),
@@ -162,7 +167,7 @@ class _FooterState extends State<Footer> with SingleTickerProviderStateMixin {
           "© 2025 AMR Health",
           style: GoogleFonts.montserrat(
             fontSize: 14,
-            color: Colors.white60, // Ajusté pour contraster avec le dégradé
+            color: Colors.white60,
           ),
         ),
       ],
@@ -195,9 +200,7 @@ class _FooterState extends State<Footer> with SingleTickerProviderStateMixin {
         padding: EdgeInsets.all(8),
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          border: Border.all(
-              color: Colors.white
-                  .withOpacity(0.3)), // Ajusté pour contraster avec le dégradé
+          border: Border.all(color: Colors.white.withOpacity(0.3)),
         ),
         child: Icon(
           icon,

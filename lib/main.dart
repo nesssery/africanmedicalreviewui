@@ -10,7 +10,7 @@ import 'screens/tablet/tablet_home.dart';
 import 'screens/desktop/desktop_home.dart';
 import 'widgets/responsive_widget.dart';
 import 'controllers/navigation_controller.dart';
-import 'controllers/auth_controller.dart'; // ✅ Importation du AuthController
+import 'controllers/auth_controller.dart';
 import 'package:get_storage/get_storage.dart';
 
 void main() async {
@@ -29,9 +29,19 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Multi-Platform App',
-      theme: ThemeData(primarySwatch: Colors.blue),
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+        // Option 1 : Couleur unie douce (gris clair)
+        scaffoldBackgroundColor: Colors.grey[100], // Gris clair user-friendly
 
-      // ✅ Utilisation de `initialRoute` au lieu de `home`
+        // Option 2 : Dégradé subtil (commentée, décommente pour utiliser)
+        /*
+        scaffoldBackgroundColor: Colors.transparent, // Nécessaire pour un dégradé
+        // Définir un background global avec un dégradé
+        // Note : Pour un dégradé, il faut envelopper chaque Scaffold dans un Container avec un decoration,
+        // ou utiliser un thème personnalisé pour chaque page. Voici une solution alternative :
+        */
+      ),
       initialRoute: '/',
       getPages: [
         GetPage(
@@ -45,7 +55,7 @@ class MyApp extends StatelessWidget {
         GetPage(
           name: '/signup',
           page: () => InscriptionPage(),
-          transition: Transition.rightToLeft, // ✅ Animation de transition
+          transition: Transition.rightToLeft,
         ),
         GetPage(
           name: '/login',
@@ -63,7 +73,7 @@ class MyApp extends StatelessWidget {
         GetPage(
           name: '/specialities',
           page: () => SpecialitiesPage(),
-        )
+        ),
       ],
     );
   }
