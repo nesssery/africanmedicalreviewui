@@ -72,9 +72,57 @@ class TopNavBar extends StatelessWidget implements PreferredSizeWidget {
                 ),
                 Row(
                   mainAxisSize: MainAxisSize.min,
-                  children: List.generate(menuItems.length, (index) {
-                    return buildMenuItem(menuItems[index], index);
-                  }),
+                  children: [
+                    // Menu items existants
+                    ...List.generate(menuItems.length, (index) {
+                      return buildMenuItem(menuItems[index], index);
+                    }),
+                    // Ajout du bouton "Soumettre un Article" pour les utilisateurs connectés
+                    Obx(() {
+                      return authController.isLoggedIn.value
+                          ? Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 20),
+                              child: MouseRegion(
+                                cursor: SystemMouseCursors.click,
+                                onEnter: (_) => showButtonHover(true),
+                                onExit: (_) => showButtonHover(false),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    Get.toNamed('/submit-article');
+                                  },
+                                  child: AnimatedContainer(
+                                    duration: Duration(milliseconds: 300),
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: 8, horizontal: 10),
+                                    decoration: BoxDecoration(
+                                      color:
+                                          Colors.white.withValues(alpha: 0.1),
+                                      borderRadius: BorderRadius.circular(4),
+                                    ),
+                                    child: Text(
+                                      "Soumettre un Article",
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.normal,
+                                        shadows: [
+                                          Shadow(
+                                            blurRadius: 1.0,
+                                            color: Colors.black
+                                                .withValues(alpha: 0.3),
+                                            offset: Offset(0, 1),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            )
+                          : SizedBox.shrink();
+                    }),
+                  ],
                 ),
                 Obx(() {
                   return authController.isLoggedIn.value

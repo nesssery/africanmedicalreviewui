@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:africanmedicalreview/article_detail_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -28,6 +29,18 @@ class _ArticleCardState extends State<ArticleCard> {
     });
   }
 
+  // Fonction pour corriger les caractères mal encodés
+  String fixEncoding(String text) {
+    try {
+      // Supposons que le texte est encodé en ISO-8859-1 (Latin-1) au lieu de UTF-8
+      final latin1Bytes = latin1.encode(text);
+      return utf8.decode(latin1Bytes, allowMalformed: true);
+    } catch (e) {
+      // Si la conversion échoue, retourner le texte original
+      return text;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
@@ -51,6 +64,12 @@ class _ArticleCardState extends State<ArticleCard> {
     // Ajuster la taille de la police pour les petits écrans
     double titleFontSize = screenWidth < 400 ? 16 : 18;
     double descriptionFontSize = screenWidth < 400 ? 12 : 14;
+
+    // Corriger les accents dans le titre et la description
+    String correctedTitle =
+        fixEncoding(widget.article["title"] ?? "Titre inconnu");
+    String correctedDescription = fixEncoding(
+        widget.article["articleDescription"] ?? "Description non disponible");
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
@@ -141,7 +160,7 @@ class _ArticleCardState extends State<ArticleCard> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Text(
-                              widget.article["title"] ?? "Titre inconnu",
+                              correctedTitle, // Utiliser le titre corrigé
                               style: TextStyle(
                                 fontSize: titleFontSize,
                                 fontWeight: FontWeight.bold,
@@ -161,15 +180,13 @@ class _ArticleCardState extends State<ArticleCard> {
                             Flexible(
                               fit: FlexFit.loose,
                               child: Text(
-                                widget.article["articleDescription"] ??
-                                    "Description non disponible",
+                                correctedDescription, // Utiliser la description corrigée
                                 style: TextStyle(
                                   fontSize: descriptionFontSize,
                                   color: Colors.grey[500],
                                   height: 1.5,
                                 ),
-                                maxLines:
-                                    descriptionMaxLines, // 1 ligne sur petits écrans
+                                maxLines: descriptionMaxLines,
                                 overflow: TextOverflow.ellipsis,
                               ),
                             ),

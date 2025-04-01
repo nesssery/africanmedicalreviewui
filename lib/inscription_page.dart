@@ -18,9 +18,23 @@ class _InscriptionPageState extends State<InscriptionPage>
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController titleController = TextEditingController();
+  final TextEditingController confirmPasswordController =
+      TextEditingController();
+  var selectedProfession = "Étudiant en santé".obs; // Valeur par défaut
+  final List<String> professions = [
+    "Étudiant en santé",
+    "Médecin",
+    "Pharmacien",
+    "Infirmier / Infirmière",
+    "Dentiste",
+    "Chercheur en santé",
+    "Autre professionnel de santé",
+    "Autres professions",
+  ];
   var isEditorOrReader = false.obs;
   var isPasswordVisible = false.obs;
+  var isConfirmPasswordVisible = false.obs;
+  var passwordMismatchError = "".obs;
   late AnimationController _animationController;
   late Animation<double> _opacityAnimation;
   bool _isHovered = false;
@@ -47,7 +61,7 @@ class _InscriptionPageState extends State<InscriptionPage>
     usernameController.dispose();
     emailController.dispose();
     passwordController.dispose();
-    titleController.dispose();
+    confirmPasswordController.dispose();
     super.dispose();
   }
 
@@ -60,7 +74,7 @@ class _InscriptionPageState extends State<InscriptionPage>
       case "413":
         return "Ce nom d'utilisateur est déjà pris.";
       case "412":
-        return "Le champ 'Titre' est obligatoire.";
+        return "Le champ 'Profession' est obligatoire.";
       default:
         return "Une erreur s'est produite.";
     }
@@ -139,6 +153,103 @@ class _InscriptionPageState extends State<InscriptionPage>
             ),
             obscureText: !isPasswordVisible.value,
             style: GoogleFonts.poppins(fontSize: 16, color: Colors.black),
+          )),
+    );
+  }
+
+  Widget buildConfirmPasswordField() {
+    return SizedBox(
+      width: MediaQuery.of(context).size.width > 600 ? 350 : 300,
+      child: Obx(() => TextField(
+            controller: confirmPasswordController,
+            decoration: InputDecoration(
+              labelText: "Confirmation de mot de passe",
+              prefixIcon: Icon(Icons.lock, color: Color(0xFF4DB6AC)),
+              suffixIcon: IconButton(
+                icon: Icon(isConfirmPasswordVisible.value
+                    ? Icons.visibility
+                    : Icons.visibility_off),
+                onPressed: () {
+                  isConfirmPasswordVisible.value =
+                      !isConfirmPasswordVisible.value;
+                },
+                color: Color(0xFF4DB6AC),
+              ),
+              filled: true,
+              fillColor: Colors.white,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide.none,
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(color: Color(0xFF4DB6AC), width: 2),
+              ),
+              errorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(color: Colors.red, width: 2),
+              ),
+              focusedErrorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(color: Colors.red, width: 2),
+              ),
+              errorText: passwordMismatchError.value.isNotEmpty
+                  ? passwordMismatchError.value
+                  : null,
+            ),
+            obscureText: !isConfirmPasswordVisible.value,
+            style: GoogleFonts.poppins(fontSize: 16, color: Colors.black),
+            onChanged: (value) {
+              // Réinitialiser l'erreur lorsque l'utilisateur modifie le champ
+              if (passwordMismatchError.value.isNotEmpty) {
+                passwordMismatchError.value = "";
+              }
+            },
+          )),
+    );
+  }
+
+  Widget buildProfessionDropdown() {
+    return SizedBox(
+      width: MediaQuery.of(context).size.width > 600 ? 350 : 300,
+      child: Obx(() => DropdownButtonFormField<String>(
+            value: selectedProfession.value,
+            decoration: InputDecoration(
+              labelText: "Profession",
+              prefixIcon: Icon(Icons.work_outline, color: Color(0xFF4DB6AC)),
+              filled: true,
+              fillColor: Colors.white,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide.none,
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(color: Color(0xFF4DB6AC), width: 2),
+              ),
+              errorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(color: Colors.red, width: 2),
+              ),
+              focusedErrorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(color: Colors.red, width: 2),
+              ),
+            ),
+            items: professions.map((String profession) {
+              return DropdownMenuItem<String>(
+                value: profession,
+                child: Text(
+                  profession,
+                  style: GoogleFonts.poppins(fontSize: 16, color: Colors.black),
+                ),
+              );
+            }).toList(),
+            onChanged: (String? newValue) {
+              if (newValue != null) {
+                selectedProfession.value = newValue;
+              }
+            },
           )),
     );
   }
@@ -348,14 +459,15 @@ class _InscriptionPageState extends State<InscriptionPage>
                   SizedBox(height: 15),
                   buildPasswordField(),
                   SizedBox(height: 15),
-                  buildTextField(titleController, "Titre",
-                      icon: Icons.work_outline),
+                  buildConfirmPasswordField(),
+                  SizedBox(height: 15),
+                  buildProfessionDropdown(), // Remplacement du champ "Titre" par le dropdown
                   SizedBox(height: 15),
                   SizedBox(
                     width: MediaQuery.of(context).size.width > 600 ? 350 : 300,
                     child: Obx(() => SwitchListTile(
                           title: Text(
-                            "Éditeur/Lecteur",
+                            "Éditeur",
                             style: GoogleFonts.poppins(
                               fontSize: 16,
                               color: Colors.black87,
@@ -385,12 +497,23 @@ class _InscriptionPageState extends State<InscriptionPage>
                           )
                         : buildGradientButton(
                             onPressed: () {
+                              // Vérifier si les mots de passe correspondent
+                              if (passwordController.text !=
+                                  confirmPasswordController.text) {
+                                passwordMismatchError.value =
+                                    "Les mots de passe ne correspondent pas.";
+                                return;
+                              }
+                              // Réinitialiser l'erreur si les mots de passe correspondent
+                              passwordMismatchError.value = "";
+                              // Appeler la méthode d'inscription
                               authController.registerUser(
                                 username: usernameController.text,
                                 email: emailController.text,
                                 password: passwordController.text,
                                 isEditorOrReader: isEditorOrReader.value,
-                                title: titleController.text,
+                                title: selectedProfession
+                                    .value, // Utiliser la profession sélectionnée
                               );
                             },
                             text: "S'inscrire",

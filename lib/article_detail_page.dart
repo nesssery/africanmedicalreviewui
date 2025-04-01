@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:africanmedicalreview/widgets/custom_scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -33,7 +34,7 @@ class _ArticleDetailPageState extends State<ArticleDetailPage>
       CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
     );
     _animationController.forward();
-    debugPrint("Article data: $widget.article");
+    debugPrint("Article data: ${widget.article}");
   }
 
   @override
@@ -52,6 +53,18 @@ class _ArticleDetailPageState extends State<ArticleDetailPage>
     }
   }
 
+  // Fonction pour corriger les caractères mal encodés
+  String fixEncoding(String text) {
+    try {
+      // Supposons que le texte est encodé en ISO-8859-1 (Latin-1) au lieu de UTF-8
+      final latin1Bytes = latin1.encode(text);
+      return utf8.decode(latin1Bytes, allowMalformed: true);
+    } catch (e) {
+      // Si la conversion échoue, retourner le texte original
+      return text;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     bool isFreeAccess = widget.article["isFreeAccess"] ?? false;
@@ -63,6 +76,29 @@ class _ArticleDetailPageState extends State<ArticleDetailPage>
 
     debugPrint(
         "Permissions - FreeAccess: $isFreeAccess, LoggedIn: $isUserLoggedIn, Subscribed: $isUserSubscribed, CanDownload: $canDownloadPDF");
+
+    // Corriger les accents dans les champs affichés
+    String correctedTitle =
+        fixEncoding(widget.article["title"] ?? "Titre non disponible");
+    String correctedAuthorName =
+        fixEncoding(widget.article["author_name"] ?? "Auteur inconnu");
+    String correctedSpecialityName =
+        fixEncoding(widget.article["speciality_name"] ?? "Spécialité inconnue");
+    String correctedDescription = fixEncoding(
+        widget.article["articleDescription"] ?? "Description non disponible");
+    String correctedAuthorsInfo = fixEncoding(
+        widget.article["authorsInfo"]?.isNotEmpty == true
+            ? widget.article["authorsInfo"]
+            : "Informations sur les auteurs non disponibles");
+
+    // Diviser les auteurs en une liste (supposons que les auteurs sont séparés par ", ")
+    List<String> authorsList =
+        correctedAuthorsInfo == "Informations sur les auteurs non disponibles"
+            ? [correctedAuthorsInfo]
+            : correctedAuthorsInfo
+                .split(', ')
+                .map((author) => author.trim())
+                .toList();
 
     return CustomScaffold(
       appBar: PreferredSize(
@@ -98,7 +134,7 @@ class _ArticleDetailPageState extends State<ArticleDetailPage>
                     ),
                     Expanded(
                       child: Text(
-                        widget.article["title"] ?? "Titre non disponible",
+                        correctedTitle, // Utiliser le titre corrigé
                         style: GoogleFonts.poppins(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
@@ -173,7 +209,7 @@ class _ArticleDetailPageState extends State<ArticleDetailPage>
                     ),
                     SizedBox(height: 20),
                     Text(
-                      widget.article["title"] ?? "Titre non disponible",
+                      correctedTitle, // Utiliser le titre corrigé
                       style: GoogleFonts.poppins(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
@@ -182,7 +218,7 @@ class _ArticleDetailPageState extends State<ArticleDetailPage>
                     ),
                     SizedBox(height: 8),
                     Text(
-                      "Par ${widget.article["author_name"] ?? "Auteur inconnu"} - ${widget.article["speciality_name"] ?? "Spécialité inconnue"}",
+                      "Par $correctedAuthorName - $correctedSpecialityName", // Utiliser les champs corrigés
                       style: GoogleFonts.poppins(
                         fontSize: 16,
                         color: Colors.grey[600],
@@ -191,13 +227,42 @@ class _ArticleDetailPageState extends State<ArticleDetailPage>
                     ),
                     SizedBox(height: 15),
                     Text(
-                      widget.article["articleDescription"] ??
-                          "Description non disponible",
+                      correctedDescription, // Utiliser la description corrigée
                       style: GoogleFonts.poppins(
                         fontSize: 16,
                         color: Colors.black54,
                         height: 1.5,
                       ),
+                    ),
+                    SizedBox(height: 20),
+                    // Ajout de la section "Informations sur les auteurs"
+                    Text(
+                      "INFORMATIONS SUR LES AUTEURS", // Majuscule pour correspondre à la capture d'écran
+                      style: GoogleFonts.poppins(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black87,
+                      ),
+                    ),
+                    SizedBox(height: 8),
+                    // Afficher chaque auteur sur une nouvelle ligne
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: authorsList
+                          .map((author) => Padding(
+                                padding: const EdgeInsets.only(
+                                    bottom:
+                                        4.0), // Espacement entre les auteurs
+                                child: Text(
+                                  author,
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 16,
+                                    color: Colors.black54,
+                                    height: 1.5,
+                                  ),
+                                ),
+                              ))
+                          .toList(),
                     ),
                     SizedBox(height: 20),
                     Center(
@@ -238,7 +303,8 @@ class _ArticleDetailPageState extends State<ArticleDetailPage>
                                       widget.article["article_file_url"] ?? ""),
                                   icon: Icon(Icons.picture_as_pdf,
                                       color: Colors.white),
-                                  label: Text("Télécharger le PDF",
+                                  label: Text(
+                                      "TÉLÉCHARGER LE PDF", // Majuscule pour correspondre à la capture d'écran
                                       style: GoogleFonts.poppins(
                                           fontSize: 16, color: Colors.white)),
                                   style: ElevatedButton.styleFrom(

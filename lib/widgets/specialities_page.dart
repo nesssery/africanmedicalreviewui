@@ -52,7 +52,9 @@ class _SpecialitiesPageState extends State<SpecialitiesPage>
       final response = await http.get(Uri.parse(apiUrl));
 
       if (response.statusCode == 200) {
-        final List<dynamic> data = jsonDecode(response.body);
+        // Décoder manuellement les données brutes en UTF-8 avant de les passer à jsonDecode
+        final String decodedBody = utf8.decode(response.bodyBytes);
+        final List<dynamic> data = jsonDecode(decodedBody);
         setState(() {
           specialities = List<Map<String, dynamic>>.from(data);
           filteredSpecialities = specialities;

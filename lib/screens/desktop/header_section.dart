@@ -56,8 +56,8 @@ class _HeaderSectionState extends State<HeaderSection>
                 borderRadius: BorderRadius.circular(12),
                 child: Image.network(
                   "http://158.69.52.19:8007/media/StaticImages/image-desktop-header.jpg",
-                  width: 450,
-                  height: 350,
+                  width: 550, // Augmenter la largeur de 450 à 550
+                  height: 450, // Augmenter la hauteur de 350 à 450
                   fit: BoxFit.cover,
                   loadingBuilder: (BuildContext context, Widget child,
                       ImageChunkEvent? loadingProgress) {
@@ -65,8 +65,9 @@ class _HeaderSectionState extends State<HeaderSection>
                       return child;
                     }
                     return Container(
-                      width: 450,
-                      height: 350,
+                      width:
+                          550, // Ajuster la taille du conteneur de chargement
+                      height: 450,
                       child: Center(
                         child: CircularProgressIndicator(
                           value: loadingProgress.expectedTotalBytes != null
@@ -81,8 +82,8 @@ class _HeaderSectionState extends State<HeaderSection>
                   errorBuilder: (BuildContext context, Object error,
                       StackTrace? stackTrace) {
                     return Container(
-                      width: 450,
-                      height: 350,
+                      width: 550, // Ajuster la taille du conteneur d'erreur
+                      height: 450,
                       color: Colors.grey,
                       child: Center(
                         child: Text(
@@ -96,30 +97,27 @@ class _HeaderSectionState extends State<HeaderSection>
               ),
             ),
           ),
-          SizedBox(width: 100),
+          SizedBox(width: 50), // Réduire l'espacement de 100 à 50
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  "African Medical Review",
+                  "African Medical Review : La Référence Médicale Africaine.",
                   style: TextStyle(
                     fontSize: 36,
                     fontWeight: FontWeight.bold,
-                    color: Colors.black, // Change la couleur en noir
-                    // Supprime les ombres
+                    color: Colors.black,
                   ),
                 ),
                 SizedBox(height: 20),
                 Text(
-                  "Donec elementum odio ut suscipit congue. Fusce magna mattis vel fermentum, ultricies et velit. "
-                  "Suspendisse viverra, ante in eleifend vulputate, lacus lorem pretium ligula, tincidunt posuere sapien.",
+                  "Médecins, pharmaciens, infirmiers, étudiants et chercheurs y trouvent des ressources fiables et actualisées. Nous promouvons l’excellence scientifique en valorisant les travaux des experts locaux et internationaux. Explorez nos publications, soumettez vos articles et rejoignez une communauté passionnée. Accédez à des contenus exclusifs pour enrichir vos connaissances et pratiques. Ensemble, faisons avancer la santé en Afrique.",
                   style: TextStyle(
                     fontSize: 24,
-                    color: Colors.black, // Change la couleur en noir
+                    color: Colors.black,
                     height: 1.5,
-                    // Supprime les ombres
                   ),
                 ),
               ],
