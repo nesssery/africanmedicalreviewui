@@ -29,14 +29,12 @@ class _ArticleCardState extends State<ArticleCard> {
     });
   }
 
-  // Fonction pour corriger les caractères mal encodés
+  // Fonction pour corriger les caractères mal encodés (version harmonisée avec ChatGPT)
   String fixEncoding(String text) {
     try {
-      // Supposons que le texte est encodé en ISO-8859-1 (Latin-1) au lieu de UTF-8
-      final latin1Bytes = latin1.encode(text);
-      return utf8.decode(latin1Bytes, allowMalformed: true);
+      List<int> bytes = latin1.encode(text);
+      return utf8.decode(bytes);
     } catch (e) {
-      // Si la conversion échoue, retourner le texte original
       return text;
     }
   }

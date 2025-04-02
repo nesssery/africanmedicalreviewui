@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:africanmedicalreview/widgets/article_card.dart';
@@ -9,6 +10,16 @@ class ArticlesBySpecialityPage extends StatelessWidget {
   const ArticlesBySpecialityPage({Key? key, required this.speciality})
       : super(key: key);
 
+  // Fonction pour corriger les caractères mal encodés (version de ChatGPT)
+  String fixEncoding(String text) {
+    try {
+      List<int> bytes = latin1.encode(text);
+      return utf8.decode(bytes);
+    } catch (e) {
+      return text;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     print('Speciality data______: $speciality');
@@ -18,6 +29,10 @@ class ArticlesBySpecialityPage extends StatelessWidget {
         ? articlesData
         : []; // Gérer explicitement si ce n'est pas une liste
     final double screenWidth = MediaQuery.of(context).size.width;
+
+    // Corriger les accents dans le nom de la spécialité
+    String correctedSpecialityName =
+        fixEncoding(speciality["name"] ?? "Spécialité");
 
     return Scaffold(
       appBar: PreferredSize(
@@ -62,7 +77,7 @@ class ArticlesBySpecialityPage extends StatelessWidget {
                     // Titre
                     Expanded(
                       child: Text(
-                        speciality["name"] ?? "Spécialité",
+                        correctedSpecialityName, // Utiliser le nom corrigé
                         style: GoogleFonts.poppins(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,

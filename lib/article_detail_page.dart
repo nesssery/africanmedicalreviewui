@@ -53,14 +53,12 @@ class _ArticleDetailPageState extends State<ArticleDetailPage>
     }
   }
 
-  // Fonction pour corriger les caractères mal encodés
+  /// ✅ Fonction corrigée pour gérer les problèmes d'encodage (SÃ©nÃ©gal -> Sénégal)
   String fixEncoding(String text) {
     try {
-      // Supposons que le texte est encodé en ISO-8859-1 (Latin-1) au lieu de UTF-8
-      final latin1Bytes = latin1.encode(text);
-      return utf8.decode(latin1Bytes, allowMalformed: true);
+      List<int> bytes = latin1.encode(text);
+      return utf8.decode(bytes);
     } catch (e) {
-      // Si la conversion échoue, retourner le texte original
       return text;
     }
   }
@@ -74,10 +72,6 @@ class _ArticleDetailPageState extends State<ArticleDetailPage>
     bool canDownloadPDF =
         isFreeAccess || (!isFreeAccess && isUserLoggedIn && isUserSubscribed);
 
-    debugPrint(
-        "Permissions - FreeAccess: $isFreeAccess, LoggedIn: $isUserLoggedIn, Subscribed: $isUserSubscribed, CanDownload: $canDownloadPDF");
-
-    // Corriger les accents dans les champs affichés
     String correctedTitle =
         fixEncoding(widget.article["title"] ?? "Titre non disponible");
     String correctedAuthorName =
@@ -91,7 +85,6 @@ class _ArticleDetailPageState extends State<ArticleDetailPage>
             ? widget.article["authorsInfo"]
             : "Informations sur les auteurs non disponibles");
 
-    // Diviser les auteurs en une liste (supposons que les auteurs sont séparés par ", ")
     List<String> authorsList =
         correctedAuthorsInfo == "Informations sur les auteurs non disponibles"
             ? [correctedAuthorsInfo]
@@ -134,7 +127,7 @@ class _ArticleDetailPageState extends State<ArticleDetailPage>
                     ),
                     Expanded(
                       child: Text(
-                        correctedTitle, // Utiliser le titre corrigé
+                        correctedTitle,
                         style: GoogleFonts.poppins(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
@@ -209,7 +202,7 @@ class _ArticleDetailPageState extends State<ArticleDetailPage>
                     ),
                     SizedBox(height: 20),
                     Text(
-                      correctedTitle, // Utiliser le titre corrigé
+                      correctedTitle,
                       style: GoogleFonts.poppins(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
@@ -218,7 +211,7 @@ class _ArticleDetailPageState extends State<ArticleDetailPage>
                     ),
                     SizedBox(height: 8),
                     Text(
-                      "Par $correctedAuthorName - $correctedSpecialityName", // Utiliser les champs corrigés
+                      "Par $correctedAuthorName - $correctedSpecialityName",
                       style: GoogleFonts.poppins(
                         fontSize: 16,
                         color: Colors.grey[600],
@@ -227,7 +220,7 @@ class _ArticleDetailPageState extends State<ArticleDetailPage>
                     ),
                     SizedBox(height: 15),
                     Text(
-                      correctedDescription, // Utiliser la description corrigée
+                      correctedDescription,
                       style: GoogleFonts.poppins(
                         fontSize: 16,
                         color: Colors.black54,
@@ -235,9 +228,8 @@ class _ArticleDetailPageState extends State<ArticleDetailPage>
                       ),
                     ),
                     SizedBox(height: 20),
-                    // Ajout de la section "Informations sur les auteurs"
                     Text(
-                      "INFORMATIONS SUR LES AUTEURS", // Majuscule pour correspondre à la capture d'écran
+                      "INFORMATIONS SUR LES AUTEURS",
                       style: GoogleFonts.poppins(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -245,14 +237,11 @@ class _ArticleDetailPageState extends State<ArticleDetailPage>
                       ),
                     ),
                     SizedBox(height: 8),
-                    // Afficher chaque auteur sur une nouvelle ligne
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: authorsList
                           .map((author) => Padding(
-                                padding: const EdgeInsets.only(
-                                    bottom:
-                                        4.0), // Espacement entre les auteurs
+                                padding: const EdgeInsets.only(bottom: 4.0),
                                 child: Text(
                                   author,
                                   style: GoogleFonts.poppins(
@@ -303,8 +292,7 @@ class _ArticleDetailPageState extends State<ArticleDetailPage>
                                       widget.article["article_file_url"] ?? ""),
                                   icon: Icon(Icons.picture_as_pdf,
                                       color: Colors.white),
-                                  label: Text(
-                                      "TÉLÉCHARGER LE PDF", // Majuscule pour correspondre à la capture d'écran
+                                  label: Text("TÉLÉCHARGER LE PDF",
                                       style: GoogleFonts.poppins(
                                           fontSize: 16, color: Colors.white)),
                                   style: ElevatedButton.styleFrom(

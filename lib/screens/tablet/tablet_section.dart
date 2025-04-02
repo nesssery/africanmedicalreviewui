@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class HeaderSection extends StatefulWidget {
-  const HeaderSection({super.key});
+class TabletHeaderSection extends StatefulWidget {
+  const TabletHeaderSection({super.key});
 
   @override
-  _HeaderSectionState createState() => _HeaderSectionState();
+  _TabletHeaderSectionState createState() => _TabletHeaderSectionState();
 }
 
-class _HeaderSectionState extends State<HeaderSection>
+class _TabletHeaderSectionState extends State<TabletHeaderSection>
     with SingleTickerProviderStateMixin {
   bool _isImageHovered = false;
   bool _isButtonHovered = false;
@@ -48,22 +48,16 @@ class _HeaderSectionState extends State<HeaderSection>
 
   @override
   Widget build(BuildContext context) {
-    final double screenWidth = MediaQuery.of(context).size.width;
-    final bool isSmallScreen = screenWidth < 600;
-
     return Container(
       constraints: BoxConstraints(maxWidth: 1200),
       margin: EdgeInsets.only(
-        top: isSmallScreen
-            ? 20
-            : 30, // Ajouter une marge supérieure pour descendre le header
-        left: isSmallScreen ? 16 : 0,
-        right: isSmallScreen ? 16 : 0,
+        top: 20, // Marge supérieure pour descendre le header
+        left: 32, // Marge latérale pour tablette
+        right: 32,
       ),
       padding: EdgeInsets.symmetric(
-        vertical:
-            isSmallScreen ? 15 : 25, // Réduire légèrement le padding vertical
-        horizontal: isSmallScreen ? 16 : 20,
+        vertical: 15,
+        horizontal: 16,
       ),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
@@ -88,7 +82,7 @@ class _HeaderSectionState extends State<HeaderSection>
           color: Colors.white.withOpacity(0.9),
           borderRadius: BorderRadius.circular(12),
         ),
-        padding: EdgeInsets.all(isSmallScreen ? 16 : 20),
+        padding: EdgeInsets.all(16),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
@@ -117,8 +111,8 @@ class _HeaderSectionState extends State<HeaderSection>
                     borderRadius: BorderRadius.circular(12),
                     child: Image.network(
                       "http://158.69.52.19:8007/media/StaticImages/image-desktop-header.jpg",
-                      width: isSmallScreen ? 300 : 550,
-                      height: isSmallScreen ? 250 : 450,
+                      width: 400, // Taille adaptée pour tablette
+                      height: 300,
                       fit: BoxFit.cover,
                       loadingBuilder: (BuildContext context, Widget child,
                           ImageChunkEvent? loadingProgress) {
@@ -126,8 +120,8 @@ class _HeaderSectionState extends State<HeaderSection>
                           return child;
                         }
                         return Container(
-                          width: isSmallScreen ? 300 : 550,
-                          height: isSmallScreen ? 250 : 450,
+                          width: 400,
+                          height: 300,
                           child: Center(
                             child: CircularProgressIndicator(
                               value: loadingProgress.expectedTotalBytes != null
@@ -142,8 +136,8 @@ class _HeaderSectionState extends State<HeaderSection>
                       errorBuilder: (BuildContext context, Object error,
                           StackTrace? stackTrace) {
                         return Container(
-                          width: isSmallScreen ? 300 : 550,
-                          height: isSmallScreen ? 250 : 450,
+                          width: 400,
+                          height: 300,
                           color: Colors.grey,
                           child: Center(
                             child: Text(
@@ -158,7 +152,7 @@ class _HeaderSectionState extends State<HeaderSection>
                 ),
               ),
             ),
-            SizedBox(width: isSmallScreen ? 20 : 50),
+            SizedBox(width: 30),
             Expanded(
               child: FadeTransition(
                 opacity: _textOpacityAnimation,
@@ -169,7 +163,7 @@ class _HeaderSectionState extends State<HeaderSection>
                     Text(
                       "African Medical Review",
                       style: TextStyle(
-                        fontSize: isSmallScreen ? 28 : 36,
+                        fontSize: 32,
                         fontWeight: FontWeight.bold,
                         color: Colors.black,
                         shadows: [
@@ -181,19 +175,18 @@ class _HeaderSectionState extends State<HeaderSection>
                         ],
                       ),
                     ),
-                    SizedBox(height: isSmallScreen ? 10 : 20),
+                    SizedBox(height: 15),
                     Text(
                       "La référence médicale africaine pour médecins, pharmaciens, infirmiers, étudiants et chercheurs. Explorez des ressources fiables, soumettez vos articles et rejoignez une communauté passionnée pour faire avancer la santé en Afrique.",
                       style: TextStyle(
-                        fontSize: isSmallScreen ? 16 : 20,
+                        fontSize: 18,
                         color: Colors.black87,
                         height: 1.5,
                       ),
-                      maxLines: isSmallScreen ? 4 : 5,
+                      maxLines: 5,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    SizedBox(height: isSmallScreen ? 15 : 25),
-                    // Bouton d'appel à l'action
+                    SizedBox(height: 20),
                     MouseRegion(
                       cursor: SystemMouseCursors.click,
                       onEnter: (_) => _showButtonHover(true),
@@ -225,14 +218,14 @@ class _HeaderSectionState extends State<HeaderSection>
                         ),
                         child: ElevatedButton(
                           onPressed: () {
-                            Get.toNamed('/specialities');
+                            Get.toNamed('/articles');
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.transparent,
                             elevation: 0,
                             padding: EdgeInsets.symmetric(
-                              horizontal: isSmallScreen ? 20 : 30,
-                              vertical: isSmallScreen ? 10 : 15,
+                              horizontal: 25,
+                              vertical: 12,
                             ),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
@@ -241,7 +234,7 @@ class _HeaderSectionState extends State<HeaderSection>
                           child: Text(
                             "Découvrir maintenant",
                             style: TextStyle(
-                              fontSize: isSmallScreen ? 14 : 16,
+                              fontSize: 15,
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
                             ),
