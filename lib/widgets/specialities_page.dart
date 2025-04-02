@@ -46,7 +46,8 @@ class _SpecialitiesPageState extends State<SpecialitiesPage>
   }
 
   Future<void> fetchSpecialities() async {
-    final String apiUrl = "http://158.69.52.19:8007/api/specialities/articles/";
+    final String apiUrl =
+        "https://api.africanmedicalreview.com/api/specialities/articles/";
 
     try {
       final response = await http.get(Uri.parse(apiUrl));
