@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Multi-Platform App',
+      title: 'African Medical review',
       theme: ThemeData(
         primarySwatch: Colors.blue,
         // Option 1 : Couleur unie douce (gris clair)

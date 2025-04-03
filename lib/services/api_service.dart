@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class ApiService {
-  static const String baseUrl = "https://api.africanmedicalreview.com/api";
+  static const String baseUrl = "http://158.69.52.19:8007/api";
 
   /// 🔹 Récupère les 10 derniers articles en vedette
   static Future<List<Map<String, dynamic>>> fetchFeaturedArticles() async {
