@@ -116,7 +116,7 @@ class _HeaderSectionState extends State<HeaderSection>
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(12),
                     child: Image.network(
-                      "http://158.69.52.19:8007/media/StaticImages/image-desktop-header.jpg",
+                      "https://api.africanmedicalreview.com/media/StaticImages/image-desktop-header.jpg",
                       width: isSmallScreen ? 300 : 550,
                       height: isSmallScreen ? 250 : 450,
                       fit: BoxFit.cover,
