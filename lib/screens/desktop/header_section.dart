@@ -54,15 +54,12 @@ class _HeaderSectionState extends State<HeaderSection>
     return Container(
       constraints: BoxConstraints(maxWidth: 1200),
       margin: EdgeInsets.only(
-        top: isSmallScreen
-            ? 20
-            : 30, // Ajouter une marge supérieure pour descendre le header
+        top: isSmallScreen ? 20 : 30,
         left: isSmallScreen ? 16 : 0,
         right: isSmallScreen ? 16 : 0,
       ),
       padding: EdgeInsets.symmetric(
-        vertical:
-            isSmallScreen ? 15 : 25, // Réduire légèrement le padding vertical
+        vertical: isSmallScreen ? 15 : 25,
         horizontal: isSmallScreen ? 16 : 20,
       ),
       decoration: BoxDecoration(
@@ -115,44 +112,11 @@ class _HeaderSectionState extends State<HeaderSection>
                   ),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(12),
-                    child: Image.network(
-                      "http://158.69.52.19:8007/media/StaticImages/image-desktop-header.jpg",
+                    child: Image.asset(
+                      "assets/images/image-desktop-header.jpg", // Utilisation de l'image locale
                       width: isSmallScreen ? 300 : 550,
                       height: isSmallScreen ? 250 : 450,
                       fit: BoxFit.cover,
-                      loadingBuilder: (BuildContext context, Widget child,
-                          ImageChunkEvent? loadingProgress) {
-                        if (loadingProgress == null) {
-                          return child;
-                        }
-                        return Container(
-                          width: isSmallScreen ? 300 : 550,
-                          height: isSmallScreen ? 250 : 450,
-                          child: Center(
-                            child: CircularProgressIndicator(
-                              value: loadingProgress.expectedTotalBytes != null
-                                  ? loadingProgress.cumulativeBytesLoaded /
-                                      (loadingProgress.expectedTotalBytes ?? 1)
-                                  : null,
-                              color: Colors.black,
-                            ),
-                          ),
-                        );
-                      },
-                      errorBuilder: (BuildContext context, Object error,
-                          StackTrace? stackTrace) {
-                        return Container(
-                          width: isSmallScreen ? 300 : 550,
-                          height: isSmallScreen ? 250 : 450,
-                          color: Colors.grey,
-                          child: Center(
-                            child: Text(
-                              "Erreur de chargement",
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ),
-                        );
-                      },
                     ),
                   ),
                 ),
